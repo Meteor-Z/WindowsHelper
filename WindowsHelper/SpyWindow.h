@@ -12,6 +12,9 @@ public:
 	SpyWindow(QWidget *parent = nullptr);
 	~SpyWindow();
 
+protected:
+	void paintEvent(QPaintEvent* e) override;
+
 private:
 	Ui::SpyWindowClass ui;
 };

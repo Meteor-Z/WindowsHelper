@@ -13,25 +13,28 @@ WindowsHelper::WindowsHelper(QWidget *parent)
     m_CentralWidget = ui.centralWidget;
 
     m_MainLayout = new QVBoxLayout(m_CentralWidget);
-    m_ButtonLayout = new QHBoxLayout(m_CentralWidget);
+    m_ButtonLayout = new QHBoxLayout();
     m_FrameSpyButton = new QPushButton(tr("窗口Spy"));
     m_FramProcessManagementButton = new QPushButton(tr("进程管理"));
     
-    initMainWidget();
     setInitFrameButton();
+    initMainWidget();
 
     connect(m_FrameSpyButton, &QPushButton::clicked, this, [&]() {
         m_StackedWidget->setCurrentIndex(0);
+        SpyWindow* temp = static_cast<SpyWindow*>(m_StackedWidget->currentWidget());
+        temp->show();
         });
     connect(m_FramProcessManagementButton, &QPushButton::clicked, this, [&]() {
         m_StackedWidget->setCurrentIndex(1);
+        
         });
     
     m_CentralWidget->setLayout(m_MainLayout); // 设置主布局
 }
 
-WindowsHelper::~WindowsHelper()
-{}
+WindowsHelper::~WindowsHelper() {
+}
 
 
 void WindowsHelper::setInitFrameButton() {
