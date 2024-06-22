@@ -55,7 +55,7 @@ private:
 	// 设置所有Button的样式
 	void setAllButtonStyle();
 	
-	// 设置所有CheckBox的样式
+	// 
 	void setAllCheckBoxSytle();
 
 	// 在TableWidget里面添加标题
@@ -82,7 +82,7 @@ private:
 
 	QGridLayout* m_LeftButtomWindowGridLayout{}; // 左下角窗口相关的的Layout 
 
-	QPushButton* m_IconButton{}; // 瞄准的图标,其实我也不知道这个怎么实现的。。
+	QPushButton* m_ShootButton{}; // 瞄准的图标,其实我也不知道这个怎么实现的。。
 
 	QLineEdit* m_WindowHandleLineEdit{}; // 窗口句柄
 	QLineEdit* m_WindowTitleLineEdit{}; // 窗口标签

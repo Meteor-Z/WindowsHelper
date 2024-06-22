@@ -89,9 +89,8 @@ void SpyWindow::setAllLayout() {
 }
 
 void SpyWindow::initLeftButtomWindowLayout() {
-    m_IconButton = new QPushButton(tr("探测图片"), this);
+    m_ShootButton = new QPushButton(tr("探测图片"), this);
    
-
     QLabel* windowHandleLabel = new QLabel(tr("窗口句柄"), this);
     windowHandleLabel->setFixedSize(80, 30);
 
@@ -115,7 +114,7 @@ void SpyWindow::initLeftButtomWindowLayout() {
 
 
     // 从0行0列开始，然后占了1行1列
-    m_LeftButtomWindowGridLayout->addWidget(m_IconButton, 0, 0, 1, 1);
+    m_LeftButtomWindowGridLayout->addWidget(m_ShootButton, 0, 0, 1, 1);
 
     m_LeftButtomWindowGridLayout->addWidget(windowHandleLabel, 0, 1, 1, 1);
     m_LeftButtomWindowGridLayout->addWidget(m_WindowHandleLineEdit, 0, 2, 1, 2);
@@ -326,7 +325,7 @@ void SpyWindow::initTableWidget() {
 
 void SpyWindow::setAllButtonStyle() {
     // 设置大小
-    m_IconButton->setFixedSize(50, 50);
+    m_ShootButton->setFixedSize(50, 50);
     m_TopLevelPushButton->setFixedSize(30, 30);
     m_ParentPushButton->setFixedSize(30, 30);
     m_PreviewPushButton->setFixedSize(30, 30);
@@ -336,6 +335,7 @@ void SpyWindow::setAllButtonStyle() {
     // 设置图片
     m_FlushButton->setIcon(QIcon("image/flush_buttom.jpg"));
     m_ProgramPathPushButton->setIcon(QIcon("image/file.jpg"));
+    m_ShootButton->setIcon(QIcon("image/shoot.png"));
     
 }
 
