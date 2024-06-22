@@ -89,7 +89,7 @@ void SpyWindow::setAllLayout() {
 }
 
 void SpyWindow::initLeftButtomWindowLayout() {
-    m_ShootButton = new QPushButton(tr("Ì½²âÍ¼Æ¬"), this);
+    m_ShootButton = new QPushButton(this);
    
     QLabel* windowHandleLabel = new QLabel(tr("´°¿Ú¾ä±ú"), this);
     windowHandleLabel->setFixedSize(80, 30);
