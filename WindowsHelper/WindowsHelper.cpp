@@ -10,7 +10,7 @@ WindowsHelper::WindowsHelper(QWidget *parent)
 
     setWindowTitle(tr("WindowsHelper"));
     // 设置初始值大小
-    resize(1500, 800);
+    resize(1700, 1300);
 
     m_CentralWidget = ui.centralWidget;
 

@@ -1,3 +1,6 @@
 <RCC>
     <qresource prefix="/WindowsHelper"/>
+    <qresource prefix="/">
+        <file>image/flush_buttom.jpg</file>
+    </qresource>
 </RCC>
