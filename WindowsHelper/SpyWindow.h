@@ -15,6 +15,7 @@
 #include <QLineEdit>
 #include <QCheckBox>
 #include <qTableWidget>
+#include <QStringList>
 #include "ui_SpyWindow.h"
 
 
@@ -53,9 +54,15 @@ private:
 
 	// 设置所有Button的样式
 	void setAllButtonStyle();
-
+	
+	// 设置所有CheckBox的样式
 	void setAllCheckBoxSytle();
 
+	// 在TableWidget里面添加标题
+	void addTitleRow(const QString& title);
+
+	// 添加信息，不过后期可以直接从文件中读取
+	void addRow(const QStringList& data);
 private:
 	Ui::SpyWindowClass ui;
 	QTreeWidget* m_WindowTree{}; // 窗口的Tree

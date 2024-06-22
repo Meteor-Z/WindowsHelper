@@ -2,6 +2,8 @@
 #include <Windows.h>
 #include <QStyleOption>
 #include <QPainter>
+#include <QHeaderView>
+#include <QTableWidgetItem>
 
 SpyWindow::SpyWindow(QWidget *parent)
 	: QWidget(parent)
@@ -19,7 +21,7 @@ SpyWindow::SpyWindow(QWidget *parent)
     initFunctionLayout();
     initTableWidget();
 
-	// 设置所有布局
+	// 设置按钮的所有Style
     setAllButtonStyle();
     setAllLayout();
 }
@@ -72,6 +74,7 @@ void SpyWindow::setAllLayout() {
     m_LeftButtomLayout->addLayout(m_AttributesLeftLayout);
     m_LeftButtomLayout->addLayout(m_FunctionGridLayout);
     m_LeftButtomLayout->addWidget(m_InfoTableWidget);
+    // 设置向上对齐
     m_LeftButtomLayout->setAlignment(Qt::AlignTop);
 
     m_AttributesLeftLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
@@ -90,9 +93,14 @@ void SpyWindow::initLeftButtomWindowLayout() {
    
 
     QLabel* windowHandleLabel = new QLabel(tr("窗口句柄"), this);
-    QLabel* windowTitleLabel = new QLabel(tr("窗口标题"), this);
-    QLabel* windowPosLabel = new QLabel(tr("窗口位置"), this);
+    windowHandleLabel->setFixedSize(80, 30);
 
+    QLabel* windowTitleLabel = new QLabel(tr("窗口标题"), this);
+    windowTitleLabel->setFixedSize(80, 30);
+    QLabel* windowPosLabel = new QLabel(tr("窗口位置"), this);
+    
+    windowPosLabel->setFixedSize(80, 30);
+    
     m_WindowHandleLineEdit = new QLineEdit(this);
     m_WindowTitleLineEdit = new QLineEdit(this);
     m_WindowPosLineEdit = new QLineEdit(this);
@@ -103,7 +111,6 @@ void SpyWindow::initLeftButtomWindowLayout() {
 
 
     m_FlushButton = new QPushButton(this);
-    m_FlushButton->setIcon(QIcon("image/flush_buttom.jpg"));
     m_FlushButton->setFixedSize(30, 30);
 
 
@@ -202,24 +209,171 @@ void SpyWindow::initFunctionLayout() {
 
 void SpyWindow::initTableWidget() {
     m_InfoTableWidget = new QTableWidget(this);
+    QStringList headers { "属性名", "属性值", "备注" };
+    m_InfoTableWidget->setColumnCount(headers.count());
+    m_InfoTableWidget->setHorizontalHeaderLabels(headers);
+    m_InfoTableWidget->verticalHeader()->setHidden(true);
+    
+    // 设置铺平，占满整个QTableWidget
+    m_InfoTableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    
+    // 这个感觉以后可以写在文件中
+    addTitleRow("基本信息");
+    addRow(QStringList() << "窗口句柄");
+    addRow(QStringList() << "窗口类型");
+    addRow(QStringList() << "窗口类型");
+    addRow(QStringList() << "窗口句柄");
+    addRow(QStringList() << "窗口类名");
+    addRow(QStringList() << "标识(ID)");
+    addRow(QStringList() << "窗口尺寸");
+    addRow(QStringList() << "客户区");
+    addRow(QStringList() << "窗口样式");
+    addRow(QStringList() << "实例句柄");
+    addRow(QStringList() << "菜单句柄");
+    addRow(QStringList() << "进程句柄");
+    addRow(QStringList() << "窗口字体");
+    addRow(QStringList() << "窗口可视");
+    addRow(QStringList() << "窗口禁止");
+    addRow(QStringList() << "窗口置顶");
+    addRow(QStringList() << "窗口透明");
+    addRow(QStringList() << "Unicode窗口");
+    
+    addTitleRow("关系窗口");
+    
+    addRow(QStringList() << "所属窗口");
+    addRow(QStringList() << "顶级窗口");
+    addRow(QStringList() << "上一窗口");
+    addRow(QStringList() << "下一窗口");
+
+    addTitleRow("窗口类");
+
+    addRow(QStringList() << "窗口类名");
+    addRow(QStringList() << "类样式");
+    addRow(QStringList() << "窗口过程");
+    addRow(QStringList() << "模块句柄");
+    addRow(QStringList() << "附加字节");
+    addRow(QStringList() << "窗口附加字节");
+    addRow(QStringList() << "图标句柄");
+    addRow(QStringList() << "光标句柄");
+    addRow(QStringList() << "背景画刷");
+
+    addTitleRow("类样式");
+    
+    addRow(QStringList() << "CS BYTEALIGNCLIENT" << " " << "");
+    addRow(QStringList() << "CS BYTEALIGNWINDOW" << "" << "");
+    addRow(QStringList() << "CS CLASSDC" << "" << "");
+    addRow(QStringList() << "CS DBLCLKS" << "" << "");
+    addRow(QStringList() << "CS GLOBALCLASS" << "" << "");
+    addRow(QStringList() << "CS HREDRAW" << "" << "");
+    addRow(QStringList() << "CS_IME" << "" << "");
+    addRow(QStringList() << "CS NOCLOSE" << "" << "");
+    addRow(QStringList() << "CS OWNDC" << "" << "");
+    addRow(QStringList() << "CS PARENTDC" << "" << "");
+    addRow(QStringList() << "CS SAVEBITS" << "" << "");
+    addRow(QStringList() << "SURRTRAW" << "" << "");
+
+    addTitleRow("窗口样式");
+
+    addRow(QStringList() << "WS_POPUP");
+    addRow(QStringList() << "WS_CHILDWINDOW");
+    addRow(QStringList() << "WS_MINIMIZE");
+    addRow(QStringList() << "WS_VISIBLE");
+    addRow(QStringList() << "WS_DISABLED");
+    addRow(QStringList() << "WS_CLIPSIBLINGS");
+    addRow(QStringList() << "WS_CLIPCHILDREN");
+    addRow(QStringList() << "WS_MAXIMIZE");
+    addRow(QStringList() << "WS_CAPTION");
+    addRow(QStringList() << "WS_BORDER");
+    addRow(QStringList() << "WS_DLGFRAME");
+    addRow(QStringList() << "WS_VSCROLL");
+    addRow(QStringList() << "WS_HSCROLL");
+    addRow(QStringList() << "WS_SYSMEM");
+    addRow(QStringList() << "WS_THICKFRAME");
+    addRow(QStringList() << "WS_GROUP");
+    addRow(QStringList() << "WS_TABSTOP");
+    addRow(QStringList() << "WS_MINIMIZEBOX");
+    addRow(QStringList() << "WS_MAXIMIZEBOX");
+    addRow(QStringList() << "WS_OVERLAPPEDWINDOW");
+    addRow(QStringList() << "WS_POPUPWINDOW");
+
+    addTitleRow("扩展样式");
+
+    addRow(QStringList() << "WS_EX_PARENTNOTIFY");
+    addRow(QStringList() << "WS_EX_TOPMOST");
+    addRow(QStringList() << "WS_EX_ACCEPTFILES");
+    addRow(QStringList() << "WS_EX_TRANSPARENT");
+    addRow(QStringList() << "WS_EX_MDICHILD");
+    addRow(QStringList() << "WS_EX_TOOLWINDOW");
+    addRow(QStringList() << "WS_EX_WINDOWEDGE");
+    addRow(QStringList() << "WS_EX_CLIENTEDGE");
+    addRow(QStringList() << "WS_EX_CONTEXTHELP");
+    addRow(QStringList() << "WS_EX_RIGHT");
+    addRow(QStringList() << "WS_EX_RTLREADING");
+    addRow(QStringList() << "WS_EX_LEFTSCROLLBAR");
+    addRow(QStringList() << "WS_EX_CONTROLPARENT");
+    addRow(QStringList() << "WS_EX_STATICEDGE");
+    addRow(QStringList() << "WS_EX_APPWINDOW");
+    addRow(QStringList() << "WS_EX_OVERLAPPEDWINDOW");
+    addRow(QStringList() << "WS_EX_PALETTEWINDOW");
+    addRow(QStringList() << "WS_EX_LAYERED");
+    addRow(QStringList() << "WS_EX_NOINHERITLAYOUT");
+    addRow(QStringList() << "WS_EX_LAYOUTRTL");
+    addRow(QStringList() << "WS_EX_COMPOSITED");
+    addRow(QStringList() << "WS_EX_NOACTIVATE");
+    
+        
 }
 
 void SpyWindow::setAllButtonStyle() {
+    // 设置大小
     m_IconButton->setFixedSize(50, 50);
-
     m_TopLevelPushButton->setFixedSize(30, 30);
     m_ParentPushButton->setFixedSize(30, 30);
     m_PreviewPushButton->setFixedSize(30, 30);
     m_NextPushButton->setFixedSize(30, 30);
     m_ProgramPathPushButton->setFixedSize(30, 30);
-    
+
+    // 设置图片
+    m_FlushButton->setIcon(QIcon("image/flush_buttom.jpg"));
+    m_ProgramPathPushButton->setIcon(QIcon("image/file.jpg"));
     
 }
+
+
 
 void SpyWindow::setAllCheckBoxSytle() {
     m_VisableCheckBox->setFixedSize(20, 20);
     m_StopMoveCheckBox->setFixedSize(20, 20);
     m_TopWindowCheckBox->setFixedSize(20, 20);
     m_TransparentCheckBox->setFixedSize(20, 20);
+}
+
+void SpyWindow::addTitleRow(const QString& title) {
+    int rowPosition = m_InfoTableWidget->rowCount();
+    m_InfoTableWidget->insertRow(rowPosition);
+    QTableWidgetItem* item = new QTableWidgetItem(title);
+    item->setFlags(item->flags() & ~Qt::ItemIsEditable);  // 设置为不可编辑
+    m_InfoTableWidget->setSpan(rowPosition, 0, 1, m_InfoTableWidget->columnCount());  
+    m_InfoTableWidget->setItem(rowPosition, 0, item);
+}
+
+void SpyWindow::addRow(const QStringList& data) {
+    int rowPosition = m_InfoTableWidget->rowCount();
+    m_InfoTableWidget->insertRow(rowPosition);
+    for (int col = 0; col < data.size(); col++) {
+        QString cellData = data[col];
+        // 区分标签和列表
+        if (col == 0) {
+            cellData.prepend("   ");
+        }
+
+        QTableWidgetItem* item = new QTableWidgetItem(cellData);
+        // 将第一列设置成不可编辑
+        if (col == 0) {
+            item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+        }
+        m_InfoTableWidget->setItem(rowPosition, col, item);
+    }
+
 }
 
