@@ -4,5 +4,6 @@
         <file>image/flush_buttom.jpg</file>
         <file>image/file.jpg</file>
         <file>image/shoot.png</file>
+        <file>image/next.png</file>
     </qresource>
 </RCC>

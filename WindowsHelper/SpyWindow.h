@@ -16,6 +16,7 @@
 #include <QCheckBox>
 #include <qTableWidget>
 #include <QStringList>
+#include <QMouseEvent>
 #include "ui_SpyWindow.h"
 
 
@@ -55,14 +56,30 @@ private:
 	// 设置所有Button的样式
 	void setAllButtonStyle();
 	
-	// 
+	// 设置所有CheckBox的样式 
 	void setAllCheckBoxSytle();
+
+	// 设置所有的信号槽
+	void setAllSingalSlot();
 
 	// 在TableWidget里面添加标题
 	void addTitleRow(const QString& title);
 
+
 	// 添加信息，不过后期可以直接从文件中读取
 	void addRow(const QStringList& data);
+
+	// 信号槽，改变当前的鼠标样式
+	void changeCursor();
+
+
+	// 回复鼠标的样式，并且存储当前窗口的句柄
+	void restoreCursor();
+
+	void getPointWindowHandle();
+
+	bool eventFilter(QObject* obj, QEvent* event) override;
+
 private:
 	Ui::SpyWindowClass ui;
 	QTreeWidget* m_WindowTree{}; // 窗口的Tree
@@ -83,6 +100,7 @@ private:
 	QGridLayout* m_LeftButtomWindowGridLayout{}; // 左下角窗口相关的的Layout 
 
 	QPushButton* m_ShootButton{}; // 瞄准的图标,其实我也不知道这个怎么实现的。。
+	bool m_ShootButtonIsPress{false}; // 是否已经按下了
 
 	QLineEdit* m_WindowHandleLineEdit{}; // 窗口句柄
 	QLineEdit* m_WindowTitleLineEdit{}; // 窗口标签

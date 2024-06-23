@@ -21,9 +21,10 @@ SpyWindow::SpyWindow(QWidget *parent)
     initFunctionLayout();
     initTableWidget();
 
-	// 设置按钮的所有Style
     setAllButtonStyle();
+    setAllSingalSlot();
     setAllLayout();
+    QApplication::instance()->installEventFilter(this);
 }
 
 SpyWindow::~SpyWindow(){
@@ -336,7 +337,11 @@ void SpyWindow::setAllButtonStyle() {
     m_FlushButton->setIcon(QIcon("image/flush_buttom.jpg"));
     m_ProgramPathPushButton->setIcon(QIcon("image/file.jpg"));
     m_ShootButton->setIcon(QIcon("image/shoot.png"));
-    
+
+    m_TopLevelPushButton->setIcon(QIcon("image/next.png"));
+    m_ParentPushButton->setIcon(QIcon("image/next.png"));
+    m_NextPushButton->setIcon(QIcon("image/next.png"));
+    m_PreviewPushButton->setIcon(QIcon("image/next.png"));
 }
 
 
@@ -348,6 +353,12 @@ void SpyWindow::setAllCheckBoxSytle() {
     m_TransparentCheckBox->setFixedSize(20, 20);
 }
 
+void SpyWindow::setAllSingalSlot() {
+    // 改变鼠标的样式，注意这里是按压
+    connect(m_ShootButton, &QPushButton::pressed, this, &SpyWindow::changeCursor);
+}
+
+
 void SpyWindow::addTitleRow(const QString& title) {
     int rowPosition = m_InfoTableWidget->rowCount();
     m_InfoTableWidget->insertRow(rowPosition);
@@ -356,6 +367,8 @@ void SpyWindow::addTitleRow(const QString& title) {
     m_InfoTableWidget->setSpan(rowPosition, 0, 1, m_InfoTableWidget->columnCount());  
     m_InfoTableWidget->setItem(rowPosition, 0, item);
 }
+
+
 
 void SpyWindow::addRow(const QStringList& data) {
     int rowPosition = m_InfoTableWidget->rowCount();
@@ -377,3 +390,31 @@ void SpyWindow::addRow(const QStringList& data) {
 
 }
 
+void SpyWindow::changeCursor() {
+    
+    setCursor(QCursor(QPixmap("image/shoot.png")));
+    m_ShootButton->setIcon(QIcon(""));
+    m_ShootButtonIsPress = true;
+    
+}
+
+void SpyWindow::restoreCursor() {
+    m_ShootButton->setIcon(QIcon("image/shoot.png"));
+    setCursor(Qt::ArrowCursor);
+    m_ShootButtonIsPress = false;
+}
+
+void SpyWindow::getPointWindowHandle() {
+}
+
+bool SpyWindow::eventFilter(QObject* obj, QEvent* event) {
+    if (m_ShootButtonIsPress && event->type() == QEvent::MouseButtonRelease) {
+        QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+        if (mouseEvent->button() == Qt::LeftButton) {
+            restoreCursor();
+            getPointWindowHandle();
+            return true;
+        }
+    }
+    return QWidget::eventFilter(obj, event);
+}
