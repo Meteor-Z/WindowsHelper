@@ -4,6 +4,7 @@
 #include <QPainter>
 #include <QHeaderView>
 #include <QTableWidgetItem>
+#include <QFont>
 
 SpyWindow::SpyWindow(QWidget *parent)
 	: QWidget(parent)
@@ -111,7 +112,7 @@ void SpyWindow::initLeftButtomWindowLayout() {
 
 
     m_FlushButton = new QPushButton(this);
-    m_FlushButton->setFixedSize(30, 30);
+
 
 
     // 从0行0列开始，然后占了1行1列
@@ -220,9 +221,6 @@ void SpyWindow::initTableWidget() {
     // 这个感觉以后可以写在文件中
     addTitleRow("基本信息");
     addRow(QStringList() << "窗口句柄");
-    addRow(QStringList() << "窗口类型");
-    addRow(QStringList() << "窗口类型");
-    addRow(QStringList() << "窗口句柄");
     addRow(QStringList() << "窗口类名");
     addRow(QStringList() << "标识(ID)");
     addRow(QStringList() << "窗口尺寸");
@@ -233,7 +231,7 @@ void SpyWindow::initTableWidget() {
     addRow(QStringList() << "进程句柄");
     addRow(QStringList() << "窗口字体");
     addRow(QStringList() << "窗口可视");
-    addRow(QStringList() << "窗口禁止");
+    addRow(QStringList() << "窗口禁止" << " " <<"该窗口是否能够接收来自鼠标/键盘的输入");
     addRow(QStringList() << "窗口置顶");
     addRow(QStringList() << "窗口透明");
     addRow(QStringList() << "Unicode窗口");
@@ -325,16 +323,20 @@ void SpyWindow::initTableWidget() {
 }
 
 void SpyWindow::setAllButtonStyle() {
-    // 设置大小
+
+    m_FlushButton->setFixedSize(30, 30);
+    m_FlushButton->setIcon(QIcon("image/flush_buttom.jpg"));
+    m_FlushButton->setToolTip(tr("刷新信息"));
+
     m_ShootButton->setFixedSize(50, 50);
     m_TopLevelPushButton->setFixedSize(30, 30);
     m_ParentPushButton->setFixedSize(30, 30);
     m_PreviewPushButton->setFixedSize(30, 30);
     m_NextPushButton->setFixedSize(30, 30);
     m_ProgramPathPushButton->setFixedSize(30, 30);
+   
 
     // 设置图片
-    m_FlushButton->setIcon(QIcon("image/flush_buttom.jpg"));
     m_ProgramPathPushButton->setIcon(QIcon("image/file.jpg"));
     m_ShootButton->setIcon(QIcon("image/shoot.png"));
 
@@ -363,7 +365,14 @@ void SpyWindow::addTitleRow(const QString& title) {
     int rowPosition = m_InfoTableWidget->rowCount();
     m_InfoTableWidget->insertRow(rowPosition);
     QTableWidgetItem* item = new QTableWidgetItem(title);
-    item->setFlags(item->flags() & ~Qt::ItemIsEditable);  // 设置为不可编辑
+
+    // 加粗
+    QFont font = item->font();
+    font.setBold(true);
+    item->setFont(font);
+
+    // 设置信息并且将整行设置成不可编辑
+    item->setFlags(item->flags() & ~Qt::ItemIsEditable);
     m_InfoTableWidget->setSpan(rowPosition, 0, 1, m_InfoTableWidget->columnCount());  
     m_InfoTableWidget->setItem(rowPosition, 0, item);
 }
@@ -404,17 +413,140 @@ void SpyWindow::restoreCursor() {
     m_ShootButtonIsPress = false;
 }
 
-void SpyWindow::getPointWindowHandle() {
+void SpyWindow::getWindowHandleByPoint(const QPoint& pos) {
+    
+    m_CurrentWindowHandle = WindowFromPoint({pos.x(), pos.y()});
+    std::wstring className(256, L'\0');
+    int resultLength = GetClassName(m_CurrentWindowHandle, &className[0], className.size());
+    
+    if (resultLength == 0) {
+        DWORD error = GetLastError();
+        // 做处理
+    } else {
+        className.resize(resultLength);
+    }
+    // 这里确实是获取到了，这里要更新一下
+    //MessageBox(nullptr, className.c_str(), className.c_str(), 0);
+
+    updateHwndInfo();
+
 }
 
 bool SpyWindow::eventFilter(QObject* obj, QEvent* event) {
+    // 这里是得到这个按钮是否按下了，然后得到对应的下标，然后通过坐标得到得到对应的信息
     if (m_ShootButtonIsPress && event->type() == QEvent::MouseButtonRelease) {
         QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
         if (mouseEvent->button() == Qt::LeftButton) {
             restoreCursor();
-            getPointWindowHandle();
+            QPoint pos = QCursor::pos();
+            getWindowHandleByPoint(pos);
             return true;
         }
     }
     return QWidget::eventFilter(obj, event);
+}
+
+void SpyWindow::updateHwndInfo() {
+    if (!m_CurrentWindowHandle) {
+        return;
+    }
+
+    // 写成循环，这样省事。。。后期改一下，有点麻烦。。。
+    for (int row = 0; row < m_InfoTableWidget->rowCount(); row++) {
+        QTableWidgetItem* propertyItem = m_InfoTableWidget->item(row, 0);
+        if (!propertyItem) {
+            continue;
+        }
+
+        QString key = propertyItem->text().trimmed();
+        if (key == "窗口句柄") {
+            QString valueBase10 = QString::number(reinterpret_cast<quintptr>(m_CurrentWindowHandle));
+            QString valueBase16 = QString::number(reinterpret_cast<quintptr>(m_CurrentWindowHandle), 16);
+            m_InfoTableWidget->setItem(row, 1, new QTableWidgetItem(valueBase10));
+            m_InfoTableWidget->setItem(row, 2, new QTableWidgetItem(valueBase16));
+            
+        }
+
+        if (key == "窗口类名") {
+            std::wstring className(256, L'\0');
+            int resultLength = GetClassName(m_CurrentWindowHandle, &className[0], className.size());
+            if (resultLength != 0) {
+                QString value = QString::fromStdWString(className.substr(0, resultLength));
+                m_InfoTableWidget->setItem(row, 1, new QTableWidgetItem(value));
+            }
+        }
+
+        if (key == "窗口尺寸") {
+            RECT rect{};
+            if (GetWindowRect(m_CurrentWindowHandle, &rect)) {
+                int width = rect.right - rect.left;
+                int height = rect.bottom - rect.top;
+                QString windowSize = QString("%1 x %2").arg(width).arg(height);
+                QString detailedSize = QString("left:%1, right:%2, top:%3, bottom: %4").arg(rect.left).arg(rect.right).arg(rect.top).arg(rect.bottom);
+                // 总感觉这里不对，和spyxx的不对。。。不过先这样吧
+                m_InfoTableWidget->setItem(row, 1, new QTableWidgetItem(windowSize));
+                m_InfoTableWidget->setItem(row, 2, new QTableWidgetItem(detailedSize));
+
+            }
+        }
+
+        if (key == "客户区") {
+            RECT rect{};
+            if (GetClientRect(m_CurrentWindowHandle, &rect)) {
+                int width = rect.right - rect.left;
+                int height = rect.bottom - rect.top;
+                QString windowSize = QString("%1 x %2").arg(width).arg(height);
+                QString detailedSize = QString("left:%1, right:%2, top:%3, bottom: %4").arg(rect.left).arg(rect.right).arg(rect.top).arg(rect.bottom);
+                // 总感觉这里不对，和spyxx的不对。。。不过先这样吧
+                m_InfoTableWidget->setItem(row, 1, new QTableWidgetItem(windowSize));
+                m_InfoTableWidget->setItem(row, 2, new QTableWidgetItem(detailedSize));
+
+            }
+        }
+
+        if (key == "进程句柄") {
+            // 进程PID
+            DWORD dwPid = -1;
+            GetWindowThreadProcessId(m_CurrentWindowHandle, &dwPid);
+            HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, dwPid);
+            QString value = QString::number(dwPid);
+            m_InfoTableWidget->setItem(row, 1, new QTableWidgetItem(value));
+        }
+
+        if (key == "窗口可视") {
+            bool isVisible = IsWindowVisible(m_CurrentWindowHandle);
+            
+            QTableWidgetItem* item = new QTableWidgetItem();
+
+            if (isVisible) {
+                item->setBackground(QBrush(QColor(Qt::green)));
+            } else {
+                item->setBackground(QBrush(QColor(Qt::red)));
+            }
+            m_InfoTableWidget->setItem(row, 1, item);
+        }
+
+        if (key == "窗口禁止") {
+            bool isEnable = IsWindowEnabled(m_CurrentWindowHandle);
+
+            QTableWidgetItem* item = new QTableWidgetItem();
+
+            if (isEnable) {
+                item->setBackground(QBrush(QColor(Qt::red)));
+            } else {
+                item->setBackground(QBrush(QColor(Qt::green)));
+            }
+            m_InfoTableWidget->setItem(row, 1, item);
+        }
+
+        if (key == "窗口句柄") {
+                
+        }
+
+        
+
+    }
+   
+
+
 }

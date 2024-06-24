@@ -69,6 +69,7 @@ private:
 	// 添加信息，不过后期可以直接从文件中读取
 	void addRow(const QStringList& data);
 
+
 	// 信号槽，改变当前的鼠标样式
 	void changeCursor();
 
@@ -76,9 +77,14 @@ private:
 	// 回复鼠标的样式，并且存储当前窗口的句柄
 	void restoreCursor();
 
-	void getPointWindowHandle();
+	// 通过当前点获取坐标
+	void getWindowHandleByPoint(const QPoint& pos);
 
+	// 全局的事件过滤器
 	bool eventFilter(QObject* obj, QEvent* event) override;
+
+	// 更新窗口信息的消息
+	void updateHwndInfo();
 
 private:
 	Ui::SpyWindowClass ui;
@@ -132,6 +138,8 @@ private:
 	QPushButton* m_ProgramPathPushButton{}; // 打开程序路径
 
 	QTableWidget* m_InfoTableWidget{}; // 表格，显示窗口信息
+
+	HWND m_CurrentWindowHandle{}; // 当前的句柄，也就是当前用鼠标指出来的句柄
 
 
 
