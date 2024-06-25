@@ -9,15 +9,15 @@ WindowsHelper::WindowsHelper(QWidget *parent)
     ui.setupUi(this);
 
     setWindowTitle(tr("WindowsHelper"));
-    // ÉèÖÃ³õÊ¼Öµ´óÐ¡
+    // è®¾ç½®åˆå§‹å€¼å¤§å°
     resize(1700, 1300);
 
     m_CentralWidget = ui.centralWidget;
 
     m_MainLayout = new QVBoxLayout(m_CentralWidget);
     m_ButtonLayout = new QHBoxLayout();
-    m_FrameSpyButton = new QPushButton(tr("´°¿ÚSpy"));
-    m_FramProcessManagementButton = new QPushButton(tr("½ø³Ì¹ÜÀí"));
+    m_FrameSpyButton = new QPushButton(tr("çª—å£Spy"));
+    m_FramProcessManagementButton = new QPushButton(tr("è¿›ç¨‹ç®¡ç†"));
     
     setInitFrameButton();
     initMainWidget();
@@ -32,7 +32,7 @@ WindowsHelper::WindowsHelper(QWidget *parent)
         
         });
     
-    m_CentralWidget->setLayout(m_MainLayout); // ÉèÖÃÖ÷²¼¾Ö
+    m_CentralWidget->setLayout(m_MainLayout); // è®¾ç½®ä¸»å¸ƒå±€
 }
 
 WindowsHelper::~WindowsHelper() {
@@ -45,7 +45,7 @@ void WindowsHelper::setInitFrameButton() {
     m_ButtonLayout->addWidget(m_FrameSpyButton);
     m_ButtonLayout->addWidget(m_FramProcessManagementButton);
     m_ButtonLayout->addStretch(1);
-    // Ë®Æ½¿¿ÉÏ
+    // æ°´å¹³é ä¸Š
     m_ButtonLayout->setAlignment(Qt::AlignTop);
     
     

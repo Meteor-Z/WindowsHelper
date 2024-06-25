@@ -1,8 +1,8 @@
 #pragma once
 
-// VS´°¿ÚÂÒÂëÎÊÌâµÄ½â¾ö
+// VSçª—å£ä¹±ç é—®é¢˜çš„è§£å†³
 #if _MSC_VER >= 1600
-#pragma execution_character_set("utf-8")// ¸ÃÖ¸Áî½öÖ§³ÖVS»·¾³
+#pragma execution_character_set("utf-8")// è¯¥æŒ‡ä»¤ä»…æ”¯æŒVSç¯å¢ƒ
 #endif
 
 #include <Windows.h>
@@ -20,7 +20,7 @@
 #include "ui_SpyWindow.h"
 
 
-// Ö÷´°¿ÚÖĞµÄĞ¡´°¿Ú
+// ä¸»çª—å£ä¸­çš„å°çª—å£
 class SpyWindow : public QWidget
 {
 	Q_OBJECT
@@ -30,116 +30,119 @@ public:
 	~SpyWindow();
 
 protected:
-// ÖØĞ´´Ë·½·¨£¬Ö÷ÒªÊÇÍ¼²ãµÄ±éÀú
+// é‡å†™æ­¤æ–¹æ³•ï¼Œä¸»è¦æ˜¯å›¾å±‚çš„éå†
 	void paintEvent(QPaintEvent* e) override;
 private:
-	// ×îÉÏ²ãµÄÒ»ÏµÁĞĞÅÏ¢
+	// æœ€ä¸Šå±‚çš„ä¸€ç³»åˆ—ä¿¡æ¯
 	void initTopButton();
 
-	// ³õÊ¼»¯ËùÓĞ²¼¾ÖµÄĞÅÏ¢£¬
+	// åˆå§‹åŒ–æ‰€æœ‰å¸ƒå±€çš„ä¿¡æ¯ï¼Œ
 	void initAllLayout();
-	// ÉèÖÃËùÓĞµÄ²¼¾ÖĞÅÏ¢
+	// è®¾ç½®æ‰€æœ‰çš„å¸ƒå±€ä¿¡æ¯
 	void setAllLayout();
 
-	// ³õÊ¼»¯×óÏÂ½ÇµÄÄÇ¹ØÓÚ´°¿ÚĞÅÏ¢µÄLayout
+	// åˆå§‹åŒ–å·¦ä¸‹è§’çš„é‚£å…³äºçª—å£ä¿¡æ¯çš„Layout
 	void initLeftButtomWindowLayout();
 
-	// ³õÊ¼»¯´°¿ÚÊôĞÔµÄÄÄÒ»ĞĞ
+	// åˆå§‹åŒ–çª—å£å±æ€§çš„å“ªä¸€è¡Œ
 	void initAttributesLayout();
 
-	// ³õÊ¼»¯¹¦ÄÜÇø
+	// åˆå§‹åŒ–åŠŸèƒ½åŒº
 	void initFunctionLayout();
 
-	// ³õÊ¼»¯±í¸ñ
+	// åˆå§‹åŒ–è¡¨æ ¼
 	void initTableWidget();
 
-	// ÉèÖÃËùÓĞButtonµÄÑùÊ½
+	// è®¾ç½®æ‰€æœ‰Buttonçš„æ ·å¼
 	void setAllButtonStyle();
 	
-	// ÉèÖÃËùÓĞCheckBoxµÄÑùÊ½ 
+	// è®¾ç½®æ‰€æœ‰CheckBoxçš„æ ·å¼ 
 	void setAllCheckBoxSytle();
 
-	// ÉèÖÃËùÓĞµÄĞÅºÅ²Û
+	// è®¾ç½®æ‰€æœ‰çš„ä¿¡å·æ§½
 	void setAllSingalSlot();
 
-	// ÔÚTableWidgetÀïÃæÌí¼Ó±êÌâ
+	// åœ¨TableWidgeté‡Œé¢æ·»åŠ æ ‡é¢˜
 	void addTitleRow(const QString& title);
 
 
-	// Ìí¼ÓĞÅÏ¢£¬²»¹ıºóÆÚ¿ÉÒÔÖ±½Ó´ÓÎÄ¼şÖĞ¶ÁÈ¡
+	// æ·»åŠ ä¿¡æ¯ï¼Œä¸è¿‡åæœŸå¯ä»¥ç›´æ¥ä»æ–‡ä»¶ä¸­è¯»å–
 	void addRow(const QStringList& data);
 
 
-	// ĞÅºÅ²Û£¬¸Ä±äµ±Ç°µÄÊó±êÑùÊ½
+	// ä¿¡å·æ§½ï¼Œæ”¹å˜å½“å‰çš„é¼ æ ‡æ ·å¼
 	void changeCursor();
 
 
-	// »Ø¸´Êó±êµÄÑùÊ½£¬²¢ÇÒ´æ´¢µ±Ç°´°¿ÚµÄ¾ä±ú
+	// å›å¤é¼ æ ‡çš„æ ·å¼ï¼Œå¹¶ä¸”å­˜å‚¨å½“å‰çª—å£çš„å¥æŸ„
 	void restoreCursor();
 
-	// Í¨¹ıµ±Ç°µã»ñÈ¡×ø±ê
-	void getWindowHandleByPoint(const QPoint& pos);
+	// é€šè¿‡å½“å‰ç‚¹æ¥è®¾ç½®åæ ‡
+	void setWindowHandleByPoint(const QPoint& pos);
 
-	// È«¾ÖµÄÊÂ¼ş¹ıÂËÆ÷
+	// å…¨å±€çš„äº‹ä»¶è¿‡æ»¤å™¨
 	bool eventFilter(QObject* obj, QEvent* event) override;
 
-	// ¸üĞÂ´°¿ÚĞÅÏ¢µÄÏûÏ¢
+	// æ›´æ–°çª—å£ä¿¡æ¯çš„æ¶ˆæ¯
 	void updateHwndInfo();
+
+	// åˆ¤æ–­çª—å£æ˜¯å¦ç½®é¡¶
+	bool isWndTopMost(HWND hwnd);
 
 private:
 	Ui::SpyWindowClass ui;
-	QTreeWidget* m_WindowTree{}; // ´°¿ÚµÄTree
-	QVBoxLayout* m_MainLayout{}; // ÉÏÏÂ²¼¾ÖµÄÖ÷²¼¾Ö
+	QTreeWidget* m_WindowTree{}; // çª—å£çš„Tree
+	QVBoxLayout* m_MainLayout{}; // ä¸Šä¸‹å¸ƒå±€çš„ä¸»å¸ƒå±€
 	
-	QHBoxLayout* m_TopLayout{}; // ÉÏÃæ°´Å¥µÄ²¼¾Ö
-	QHBoxLayout* m_ButtomLayout{}; // ÏÂÃæ×óÓÒµÄLayout
+	QHBoxLayout* m_TopLayout{}; // ä¸Šé¢æŒ‰é’®çš„å¸ƒå±€
+	QHBoxLayout* m_ButtomLayout{}; // ä¸‹é¢å·¦å³çš„Layout
 
-	QPushButton* m_BasicInfoButton{};// »ù±¾ĞÅÏ¢
-	QPushButton* m_CommonOperationsButton{}; // ³£ÓÃ²Ù×÷
-	QLabel* m_FindWindowlabel{}; // ²é¿´´°¿Ú
-	QLineEdit* m_FindWindowLineEdit{}; // ÊäÈë¿ò£¬²éÕÒ
-
-
-	QVBoxLayout* m_LeftButtomLayout{}; // ×óÏÂ½ÇµÄLayout
+	QPushButton* m_BasicInfoButton{};// åŸºæœ¬ä¿¡æ¯
+	QPushButton* m_CommonOperationsButton{}; // å¸¸ç”¨æ“ä½œ
+	QLabel* m_FindWindowlabel{}; // æŸ¥çœ‹çª—å£
+	QLineEdit* m_FindWindowLineEdit{}; // è¾“å…¥æ¡†ï¼ŒæŸ¥æ‰¾
 
 
-	QGridLayout* m_LeftButtomWindowGridLayout{}; // ×óÏÂ½Ç´°¿ÚÏà¹ØµÄµÄLayout 
+	QVBoxLayout* m_LeftButtomLayout{}; // å·¦ä¸‹è§’çš„Layout
 
-	QPushButton* m_ShootButton{}; // Ãé×¼µÄÍ¼±ê,ÆäÊµÎÒÒ²²»ÖªµÀÕâ¸öÔõÃ´ÊµÏÖµÄ¡£¡£
-	bool m_ShootButtonIsPress{false}; // ÊÇ·ñÒÑ¾­°´ÏÂÁË
 
-	QLineEdit* m_WindowHandleLineEdit{}; // ´°¿Ú¾ä±ú
-	QLineEdit* m_WindowTitleLineEdit{}; // ´°¿Ú±êÇ©
-	QLineEdit* m_WindowPosLineEdit{}; // ´°¿ÚÎ»ÖÃ
-	QPushButton* m_FlushButton{}; // Ë¢ĞÂButton
+	QGridLayout* m_LeftButtomWindowGridLayout{}; // å·¦ä¸‹è§’çª—å£ç›¸å…³çš„çš„Layout 
 
-	QCheckBox* m_VisableCheckBox{}; // ¿ÉÊÓ»¯
-	QCheckBox* m_StopMoveCheckBox{}; // ½ûÖ¹
-	QCheckBox* m_TopWindowCheckBox{}; // ÖÃ¶¥
-	QCheckBox* m_TransparentCheckBox{}; // Í¸Ã÷
+	QPushButton* m_ShootButton{}; // ç„å‡†çš„å›¾æ ‡,å…¶å®æˆ‘ä¹Ÿä¸çŸ¥é“è¿™ä¸ªæ€ä¹ˆå®ç°çš„ã€‚ã€‚
+	bool m_ShootButtonIsPress{false}; // æ˜¯å¦å·²ç»æŒ‰ä¸‹äº†
 
-	QHBoxLayout* m_AttributesLeftLayout{}; // ¿¿×óµÄÊôĞÔButtom
+	QLineEdit* m_WindowHandleLineEdit{}; // çª—å£å¥æŸ„
+	QLineEdit* m_WindowTitleLineEdit{}; // çª—å£æ ‡ç­¾
+	QLineEdit* m_WindowPosLineEdit{}; // çª—å£ä½ç½®
+	QPushButton* m_FlushButton{}; // åˆ·æ–°Button
 
-	QGridLayout* m_FunctionGridLayout{}; // ×óÏÂ½Ç¹¦ÄÜÇøµÄ²¼¾Ö
+	QCheckBox* m_VisableCheckBox{}; // å¯è§†åŒ–
+	QCheckBox* m_StopMoveCheckBox{}; // ç¦æ­¢
+	QCheckBox* m_TopWindowCheckBox{}; // ç½®é¡¶
+	QCheckBox* m_TransparentCheckBox{}; // é€æ˜
 
-	QLineEdit* m_TopLevelLineEdit{}; // ¶¥¼¶´°¿Ú
-	QPushButton* m_TopLevelPushButton{}; // Ì½²â¶¥¼¶´°¿Ú
+	QHBoxLayout* m_AttributesLeftLayout{}; // é å·¦çš„å±æ€§Buttom
 
-	QLineEdit* m_ParentLineEdit{}; // ¸¸´°¿Ú
-	QPushButton* m_ParentPushButton{}; // Ì½²â¸¸´°¿Ú
+	QGridLayout* m_FunctionGridLayout{}; // å·¦ä¸‹è§’åŠŸèƒ½åŒºçš„å¸ƒå±€
 
-	QLineEdit* m_PreviewLineEdit{}; // ÉÏÒ»´°¿Ú
-	QPushButton* m_PreviewPushButton{}; // Ì½²âÉÏÒ»¸ö´°¿Ú
+	QLineEdit* m_TopLevelLineEdit{}; // é¡¶çº§çª—å£
+	QPushButton* m_TopLevelPushButton{}; // æ¢æµ‹é¡¶çº§çª—å£
 
-	QLineEdit* m_NextLineEdit{}; // ÏÂÒ»´°¿Ú
-	QPushButton* m_NextPushButton{}; // Ì½²âÏÂÒ»¸ö´°¿Ú
+	QLineEdit* m_ParentLineEdit{}; // çˆ¶çª—å£
+	QPushButton* m_ParentPushButton{}; // æ¢æµ‹çˆ¶çª—å£
 
-	QLineEdit* m_ProgramPathLineEdit{}; // ³ÌĞòÂ·¾¶
-	QPushButton* m_ProgramPathPushButton{}; // ´ò¿ª³ÌĞòÂ·¾¶
+	QLineEdit* m_PreviewLineEdit{}; // ä¸Šä¸€çª—å£
+	QPushButton* m_PreviewPushButton{}; // æ¢æµ‹ä¸Šä¸€ä¸ªçª—å£
 
-	QTableWidget* m_InfoTableWidget{}; // ±í¸ñ£¬ÏÔÊ¾´°¿ÚĞÅÏ¢
+	QLineEdit* m_NextLineEdit{}; // ä¸‹ä¸€çª—å£
+	QPushButton* m_NextPushButton{}; // æ¢æµ‹ä¸‹ä¸€ä¸ªçª—å£
 
-	HWND m_CurrentWindowHandle{}; // µ±Ç°µÄ¾ä±ú£¬Ò²¾ÍÊÇµ±Ç°ÓÃÊó±êÖ¸³öÀ´µÄ¾ä±ú
+	QLineEdit* m_ProgramPathLineEdit{}; // ç¨‹åºè·¯å¾„
+	QPushButton* m_ProgramPathPushButton{}; // æ‰“å¼€ç¨‹åºè·¯å¾„
+
+	QTableWidget* m_InfoTableWidget{}; // è¡¨æ ¼ï¼Œæ˜¾ç¤ºçª—å£ä¿¡æ¯
+
+	HWND m_CurrentWindowHandle{}; // å½“å‰çš„å¥æŸ„ï¼Œä¹Ÿå°±æ˜¯å½“å‰ç”¨é¼ æ ‡æŒ‡å‡ºæ¥çš„å¥æŸ„
 
 
 

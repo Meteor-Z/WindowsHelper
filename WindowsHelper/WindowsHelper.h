@@ -1,8 +1,8 @@
 #pragma once
 
-// VS´°¿ÚÂÒÂëÎÊÌâµÄ½â¾ö
+// VSçª—å£ä¹±ç é—®é¢˜çš„è§£å†³
 #if _MSC_VER >= 1600
-#pragma execution_character_set("utf-8")// ¸ÃÖ¸Áî½öÖ§³ÖVS»·¾³
+#pragma execution_character_set("utf-8")// è¯¥æŒ‡ä»¤ä»…æ”¯æŒVSç¯å¢ƒ
 #endif
 
 #include <QtWidgets/QMainWindow>
@@ -20,26 +20,26 @@ public:
     WindowsHelper(QWidget *parent = nullptr);
     ~WindowsHelper();
 private:
-    // ³õÊ¼»¯ÉÏÃæµÄButtonĞÅÏ¢µÄ
+    // åˆå§‹åŒ–ä¸Šé¢çš„Buttonä¿¡æ¯çš„
     void setInitFrameButton();
 
-    // ³õÊ¼»¯ÏÂÃæµÄWidgetµÄ
+    // åˆå§‹åŒ–ä¸‹é¢çš„Widgetçš„
     void initMainWidget();
 private:
 private:
     Ui::WindowsHelperClass ui{};
     
-    QWidget* m_CentralWidget{}; // Ö÷ÒªµÄ´°¿Ú
+    QWidget* m_CentralWidget{}; // ä¸»è¦çš„çª—å£
 
-    QHBoxLayout* m_ButtonLayout{}; // ÉÏÃæÒ»ÏµÁĞButtonµÄLayout
-    QVBoxLayout* m_MainLayout{}; // ´ÓÉÏµ½ÏÂµÄ²¼¾Ö
+    QHBoxLayout* m_ButtonLayout{}; // ä¸Šé¢ä¸€ç³»åˆ—Buttonçš„Layout
+    QVBoxLayout* m_MainLayout{}; // ä»ä¸Šåˆ°ä¸‹çš„å¸ƒå±€
 
-    QStackedWidget* m_StackedWidget{}; // Ö÷½çÃæ
+    QStackedWidget* m_StackedWidget{}; // ä¸»ç•Œé¢
 
-    QPushButton* m_FrameSpyButton{}; // ´°¿ÚSpy Button
-    QPushButton* m_FramProcessManagementButton{}; // ½ø³Ì¹ÜÀíµÄButton
+    QPushButton* m_FrameSpyButton{}; // çª—å£Spy Button
+    QPushButton* m_FramProcessManagementButton{}; // è¿›ç¨‹ç®¡ç†çš„Button
 
-    SpyWindow* m_SpyWindowWidget{}; // ´°¿Ú
+    SpyWindow* m_SpyWindowWidget{}; // çª—å£
 
 
     

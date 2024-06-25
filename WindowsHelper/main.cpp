@@ -1,13 +1,12 @@
-// VS´°¿ÚÂÒÂëÎÊÌâµÄ½â¾ö
+// VSçª—å£ä¹±ç é—®é¢˜çš„è§£å†³
 #if _MSC_VER >= 1600
-#pragma execution_character_set("utf-8")// ¸ÃÖ¸Áî½öÖ§³ÖVS»·¾³
+#pragma execution_character_set("utf-8")// è¯¥æŒ‡ä»¤ä»…æ”¯æŒVSç¯å¢ƒ
 #endif
 
 #include "WindowsHelper.h"
 #include <QtWidgets/QApplication>
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     WindowsHelper w;
     w.show();

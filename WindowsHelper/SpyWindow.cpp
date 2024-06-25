@@ -1,4 +1,4 @@
-#include "SpyWindow.h"
+ï»¿#include "SpyWindow.h"
 #include <Windows.h>
 #include <QStyleOption>
 #include <QPainter>
@@ -7,11 +7,11 @@
 #include <QFont>
 
 SpyWindow::SpyWindow(QWidget *parent)
-	: QWidget(parent)
+    : QWidget(parent)
 {
-	ui.setupUi(this);
+    ui.setupUi(this);
 
-    // layout¼¯Ìå³õÊ¼»¯
+    // layouté›†ä½“åˆå§‹åŒ–
     initAllLayout();
    
     
@@ -39,14 +39,14 @@ void SpyWindow::paintEvent(QPaintEvent* e) {
 }
 
 void SpyWindow::initTopButton() {
-    m_BasicInfoButton = new QPushButton(tr("¸´ÖÆ»ù±¾ĞÅÏ¢"), this);
-    m_CommonOperationsButton = new QPushButton(tr("³£ÓÃ²Ù×÷"), this);
-    m_FindWindowlabel = new QLabel(tr("²éÕÒ´°¿Ú"), this);
+    m_BasicInfoButton = new QPushButton(tr("å¤åˆ¶åŸºæœ¬ä¿¡æ¯"), this);
+    m_CommonOperationsButton = new QPushButton(tr("å¸¸ç”¨æ“ä½œ"), this);
+    m_FindWindowlabel = new QLabel(tr("æŸ¥æ‰¾çª—å£"), this);
     m_FindWindowLineEdit = new QLineEdit(this);
     m_TopLayout->addWidget(m_BasicInfoButton);
     m_TopLayout->addWidget(m_CommonOperationsButton);
     
-    // Ìí¼ÓÒ»¸öÉìËõÏî£¬ÆäÊµ¾ÍÊÇÖĞ¼ä¸ô¿ª£¬Ğ§¹û³öÀ´ÁË¾ÍĞĞ
+    // æ·»åŠ ä¸€ä¸ªä¼¸ç¼©é¡¹ï¼Œå…¶å®å°±æ˜¯ä¸­é—´éš”å¼€ï¼Œæ•ˆæœå‡ºæ¥äº†å°±è¡Œ
     m_TopLayout->addStretch();
 
     m_TopLayout->addWidget(m_FindWindowlabel);
@@ -76,13 +76,13 @@ void SpyWindow::setAllLayout() {
     m_LeftButtomLayout->addLayout(m_AttributesLeftLayout);
     m_LeftButtomLayout->addLayout(m_FunctionGridLayout);
     m_LeftButtomLayout->addWidget(m_InfoTableWidget);
-    // ÉèÖÃÏòÉÏ¶ÔÆë
+    // è®¾ç½®å‘ä¸Šå¯¹é½
     m_LeftButtomLayout->setAlignment(Qt::AlignTop);
 
     m_AttributesLeftLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     
     
-    // ´°¿Ú¿¿ÉÏ
+    // çª—å£é ä¸Š
     m_LeftButtomWindowGridLayout->setAlignment(Qt::AlignTop);
     
 
@@ -93,12 +93,12 @@ void SpyWindow::setAllLayout() {
 void SpyWindow::initLeftButtomWindowLayout() {
     m_ShootButton = new QPushButton(this);
    
-    QLabel* windowHandleLabel = new QLabel(tr("´°¿Ú¾ä±ú"), this);
+    QLabel* windowHandleLabel = new QLabel(tr("çª—å£å¥æŸ„"), this);
     windowHandleLabel->setFixedSize(80, 30);
 
-    QLabel* windowTitleLabel = new QLabel(tr("´°¿Ú±êÌâ"), this);
+    QLabel* windowTitleLabel = new QLabel(tr("çª—å£æ ‡é¢˜"), this);
     windowTitleLabel->setFixedSize(80, 30);
-    QLabel* windowPosLabel = new QLabel(tr("´°¿ÚÎ»ÖÃ"), this);
+    QLabel* windowPosLabel = new QLabel(tr("çª—å£ä½ç½®"), this);
     
     windowPosLabel->setFixedSize(80, 30);
     
@@ -115,7 +115,7 @@ void SpyWindow::initLeftButtomWindowLayout() {
 
 
 
-    // ´Ó0ĞĞ0ÁĞ¿ªÊ¼£¬È»ºóÕ¼ÁË1ĞĞ1ÁĞ
+    // ä»0è¡Œ0åˆ—å¼€å§‹ï¼Œç„¶åå äº†1è¡Œ1åˆ—
     m_LeftButtomWindowGridLayout->addWidget(m_ShootButton, 0, 0, 1, 1);
 
     m_LeftButtomWindowGridLayout->addWidget(windowHandleLabel, 0, 1, 1, 1);
@@ -135,10 +135,10 @@ void SpyWindow::initLeftButtomWindowLayout() {
     
 
 void SpyWindow::initAttributesLayout() {
-    QLabel* visableLabel = new QLabel(tr("¿ÉÊÓ"), this);
-    QLabel* stopMoveLabel = new QLabel(tr("½ûÖ¹"), this);
-    QLabel* topWindowLabel = new QLabel(tr("ÖÃ¶¥"), this);
-    QLabel* transparentLabel = new QLabel(tr("Í¸Ã÷"), this);
+    QLabel* visableLabel = new QLabel(tr("å¯è§†"), this);
+    QLabel* stopMoveLabel = new QLabel(tr("ç¦æ­¢"), this);
+    QLabel* topWindowLabel = new QLabel(tr("ç½®é¡¶"), this);
+    QLabel* transparentLabel = new QLabel(tr("é€æ˜"), this);
 
     m_VisableCheckBox= new QCheckBox(this);
     m_StopMoveCheckBox = new QCheckBox(this);
@@ -160,23 +160,23 @@ void SpyWindow::initAttributesLayout() {
 }
 
 void SpyWindow::initFunctionLayout() {
-    QLabel* topLevelLable = new QLabel(tr("¶¥¼¶´°¿Ú"), this);
+    QLabel* topLevelLable = new QLabel(tr("é¡¶çº§çª—å£"), this);
     m_TopLevelLineEdit = new QLineEdit(this);
     m_TopLevelPushButton = new QPushButton(this);
     
-    QLabel* parentLabel = new QLabel(tr("¸¸´°¿Ú"), this);
+    QLabel* parentLabel = new QLabel(tr("çˆ¶çª—å£"), this);
     m_ParentLineEdit = new QLineEdit(this);
     m_ParentPushButton = new QPushButton(this);
 
-    QLabel* previewLabel = new QLabel(tr("ÉÏÒ»´°¿Ú"), this);
+    QLabel* previewLabel = new QLabel(tr("ä¸Šä¸€çª—å£"), this);
     m_PreviewLineEdit = new QLineEdit(this);
     m_PreviewPushButton = new QPushButton(this);
 
-    QLabel* nextLabel = new QLabel(tr("ÏÂÒ»´°¿Ú"), this);
+    QLabel* nextLabel = new QLabel(tr("ä¸‹ä¸€çª—å£"), this);
     m_NextLineEdit = new QLineEdit(this);
     m_NextPushButton = new QPushButton(this);
 
-    QLabel* programPathLabel = new QLabel(tr("³ÌĞòÂ·¾¶"), this);
+    QLabel* programPathLabel = new QLabel(tr("ç¨‹åºè·¯å¾„"), this);
     m_ProgramPathLineEdit = new QLineEdit(this);
     m_ProgramPathPushButton = new QPushButton(this);
 
@@ -210,52 +210,52 @@ void SpyWindow::initFunctionLayout() {
 
 void SpyWindow::initTableWidget() {
     m_InfoTableWidget = new QTableWidget(this);
-    QStringList headers { "ÊôĞÔÃû", "ÊôĞÔÖµ", "±¸×¢" };
+    QStringList headers { "å±æ€§å", "å±æ€§å€¼", "å¤‡æ³¨" };
     m_InfoTableWidget->setColumnCount(headers.count());
     m_InfoTableWidget->setHorizontalHeaderLabels(headers);
     m_InfoTableWidget->verticalHeader()->setHidden(true);
     
-    // ÉèÖÃÆÌÆ½£¬Õ¼ÂúÕû¸öQTableWidget
+    // è®¾ç½®é“ºå¹³ï¼Œå æ»¡æ•´ä¸ªQTableWidget
     m_InfoTableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     
-    // Õâ¸ö¸Ğ¾õÒÔºó¿ÉÒÔĞ´ÔÚÎÄ¼şÖĞ
-    addTitleRow("»ù±¾ĞÅÏ¢");
-    addRow(QStringList() << "´°¿Ú¾ä±ú");
-    addRow(QStringList() << "´°¿ÚÀàÃû");
-    addRow(QStringList() << "±êÊ¶(ID)");
-    addRow(QStringList() << "´°¿Ú³ß´ç");
-    addRow(QStringList() << "¿Í»§Çø");
-    addRow(QStringList() << "´°¿ÚÑùÊ½");
-    addRow(QStringList() << "ÊµÀı¾ä±ú");
-    addRow(QStringList() << "²Ëµ¥¾ä±ú");
-    addRow(QStringList() << "½ø³Ì¾ä±ú");
-    addRow(QStringList() << "´°¿Ú×ÖÌå");
-    addRow(QStringList() << "´°¿Ú¿ÉÊÓ");
-    addRow(QStringList() << "´°¿Ú½ûÖ¹" << " " <<"¸Ã´°¿ÚÊÇ·ñÄÜ¹»½ÓÊÕÀ´×ÔÊó±ê/¼üÅÌµÄÊäÈë");
-    addRow(QStringList() << "´°¿ÚÖÃ¶¥");
-    addRow(QStringList() << "´°¿ÚÍ¸Ã÷");
-    addRow(QStringList() << "Unicode´°¿Ú");
+    // è¿™ä¸ªæ„Ÿè§‰ä»¥åå¯ä»¥å†™åœ¨æ–‡ä»¶ä¸­
+    addTitleRow("åŸºæœ¬ä¿¡æ¯");
+    addRow(QStringList() << "çª—å£å¥æŸ„");
+    addRow(QStringList() << "çª—å£ç±»å");
+    addRow(QStringList() << "æ ‡è¯†(ID)");
+    addRow(QStringList() << "çª—å£å°ºå¯¸");
+    addRow(QStringList() << "å®¢æˆ·åŒº");
+    addRow(QStringList() << "çª—å£æ ·å¼");
+    addRow(QStringList() << "å®ä¾‹å¥æŸ„");
+    addRow(QStringList() << "èœå•å¥æŸ„");
+    addRow(QStringList() << "è¿›ç¨‹å¥æŸ„");
+    addRow(QStringList() << "çª—å£å­—ä½“");
+    addRow(QStringList() << "çª—å£å¯è§†");
+    addRow(QStringList() << "çª—å£ç¦æ­¢" << " " <<"è¯¥çª—å£æ˜¯å¦èƒ½å¤Ÿæ¥æ”¶æ¥è‡ªé¼ æ ‡/é”®ç›˜çš„è¾“å…¥");
+    addRow(QStringList() << "çª—å£ç½®é¡¶");
+    addRow(QStringList() << "çª—å£é€æ˜");
+    addRow(QStringList() << "Unicodeçª—å£");
     
-    addTitleRow("¹ØÏµ´°¿Ú");
+    addTitleRow("å…³ç³»çª—å£");
     
-    addRow(QStringList() << "ËùÊô´°¿Ú");
-    addRow(QStringList() << "¶¥¼¶´°¿Ú");
-    addRow(QStringList() << "ÉÏÒ»´°¿Ú");
-    addRow(QStringList() << "ÏÂÒ»´°¿Ú");
+    addRow(QStringList() << "æ‰€å±çª—å£");
+    addRow(QStringList() << "é¡¶çº§çª—å£");
+    addRow(QStringList() << "ä¸Šä¸€çª—å£");
+    addRow(QStringList() << "ä¸‹ä¸€çª—å£");
 
-    addTitleRow("´°¿ÚÀà");
+    addTitleRow("çª—å£ç±»");
 
-    addRow(QStringList() << "´°¿ÚÀàÃû");
-    addRow(QStringList() << "ÀàÑùÊ½");
-    addRow(QStringList() << "´°¿Ú¹ı³Ì");
-    addRow(QStringList() << "Ä£¿é¾ä±ú");
-    addRow(QStringList() << "¸½¼Ó×Ö½Ú");
-    addRow(QStringList() << "´°¿Ú¸½¼Ó×Ö½Ú");
-    addRow(QStringList() << "Í¼±ê¾ä±ú");
-    addRow(QStringList() << "¹â±ê¾ä±ú");
-    addRow(QStringList() << "±³¾°»­Ë¢");
+    addRow(QStringList() << "çª—å£ç±»å");
+    addRow(QStringList() << "ç±»æ ·å¼");
+    addRow(QStringList() << "çª—å£è¿‡ç¨‹");
+    addRow(QStringList() << "æ¨¡å—å¥æŸ„");
+    addRow(QStringList() << "é™„åŠ å­—èŠ‚");
+    addRow(QStringList() << "çª—å£é™„åŠ å­—èŠ‚");
+    addRow(QStringList() << "å›¾æ ‡å¥æŸ„");
+    addRow(QStringList() << "å…‰æ ‡å¥æŸ„");
+    addRow(QStringList() << "èƒŒæ™¯ç”»åˆ·");
 
-    addTitleRow("ÀàÑùÊ½");
+    addTitleRow("ç±»æ ·å¼");
     
     addRow(QStringList() << "CS BYTEALIGNCLIENT" << " " << "");
     addRow(QStringList() << "CS BYTEALIGNWINDOW" << "" << "");
@@ -270,7 +270,7 @@ void SpyWindow::initTableWidget() {
     addRow(QStringList() << "CS SAVEBITS" << "" << "");
     addRow(QStringList() << "SURRTRAW" << "" << "");
 
-    addTitleRow("´°¿ÚÑùÊ½");
+    addTitleRow("çª—å£æ ·å¼");
 
     addRow(QStringList() << "WS_POPUP");
     addRow(QStringList() << "WS_CHILDWINDOW");
@@ -294,7 +294,7 @@ void SpyWindow::initTableWidget() {
     addRow(QStringList() << "WS_OVERLAPPEDWINDOW");
     addRow(QStringList() << "WS_POPUPWINDOW");
 
-    addTitleRow("À©Õ¹ÑùÊ½");
+    addTitleRow("æ‰©å±•æ ·å¼");
 
     addRow(QStringList() << "WS_EX_PARENTNOTIFY");
     addRow(QStringList() << "WS_EX_TOPMOST");
@@ -326,7 +326,7 @@ void SpyWindow::setAllButtonStyle() {
 
     m_FlushButton->setFixedSize(30, 30);
     m_FlushButton->setIcon(QIcon("image/flush_buttom.jpg"));
-    m_FlushButton->setToolTip(tr("Ë¢ĞÂĞÅÏ¢"));
+    m_FlushButton->setToolTip(tr("åˆ·æ–°ä¿¡æ¯"));
 
     m_ShootButton->setFixedSize(50, 50);
     m_TopLevelPushButton->setFixedSize(30, 30);
@@ -336,7 +336,7 @@ void SpyWindow::setAllButtonStyle() {
     m_ProgramPathPushButton->setFixedSize(30, 30);
    
 
-    // ÉèÖÃÍ¼Æ¬
+    // è®¾ç½®å›¾ç‰‡
     m_ProgramPathPushButton->setIcon(QIcon("image/file.jpg"));
     m_ShootButton->setIcon(QIcon("image/shoot.png"));
 
@@ -356,7 +356,7 @@ void SpyWindow::setAllCheckBoxSytle() {
 }
 
 void SpyWindow::setAllSingalSlot() {
-    // ¸Ä±äÊó±êµÄÑùÊ½£¬×¢ÒâÕâÀïÊÇ°´Ñ¹
+    // æ”¹å˜é¼ æ ‡çš„æ ·å¼ï¼Œæ³¨æ„è¿™é‡Œæ˜¯æŒ‰å‹
     connect(m_ShootButton, &QPushButton::pressed, this, &SpyWindow::changeCursor);
 }
 
@@ -366,12 +366,12 @@ void SpyWindow::addTitleRow(const QString& title) {
     m_InfoTableWidget->insertRow(rowPosition);
     QTableWidgetItem* item = new QTableWidgetItem(title);
 
-    // ¼Ó´Ö
+    // åŠ ç²—
     QFont font = item->font();
     font.setBold(true);
     item->setFont(font);
 
-    // ÉèÖÃĞÅÏ¢²¢ÇÒ½«ÕûĞĞÉèÖÃ³É²»¿É±à¼­
+    // è®¾ç½®ä¿¡æ¯å¹¶ä¸”å°†æ•´è¡Œè®¾ç½®æˆä¸å¯ç¼–è¾‘
     item->setFlags(item->flags() & ~Qt::ItemIsEditable);
     m_InfoTableWidget->setSpan(rowPosition, 0, 1, m_InfoTableWidget->columnCount());  
     m_InfoTableWidget->setItem(rowPosition, 0, item);
@@ -384,13 +384,13 @@ void SpyWindow::addRow(const QStringList& data) {
     m_InfoTableWidget->insertRow(rowPosition);
     for (int col = 0; col < data.size(); col++) {
         QString cellData = data[col];
-        // Çø·Ö±êÇ©ºÍÁĞ±í
+        // åŒºåˆ†æ ‡ç­¾å’Œåˆ—è¡¨
         if (col == 0) {
             cellData.prepend("   ");
         }
 
         QTableWidgetItem* item = new QTableWidgetItem(cellData);
-        // ½«µÚÒ»ÁĞÉèÖÃ³É²»¿É±à¼­
+        // å°†ç¬¬ä¸€åˆ—è®¾ç½®æˆä¸å¯ç¼–è¾‘
         if (col == 0) {
             item->setFlags(item->flags() & ~Qt::ItemIsEditable);
         }
@@ -413,7 +413,7 @@ void SpyWindow::restoreCursor() {
     m_ShootButtonIsPress = false;
 }
 
-void SpyWindow::getWindowHandleByPoint(const QPoint& pos) {
+void SpyWindow::setWindowHandleByPoint(const QPoint& pos) {
     
     m_CurrentWindowHandle = WindowFromPoint({pos.x(), pos.y()});
     std::wstring className(256, L'\0');
@@ -421,11 +421,11 @@ void SpyWindow::getWindowHandleByPoint(const QPoint& pos) {
     
     if (resultLength == 0) {
         DWORD error = GetLastError();
-        // ×ö´¦Àí
+        // åšå¤„ç†
     } else {
         className.resize(resultLength);
     }
-    // ÕâÀïÈ·ÊµÊÇ»ñÈ¡µ½ÁË£¬ÕâÀïÒª¸üĞÂÒ»ÏÂ
+    // è¿™é‡Œç¡®å®æ˜¯è·å–åˆ°äº†ï¼Œè¿™é‡Œè¦æ›´æ–°ä¸€ä¸‹
     //MessageBox(nullptr, className.c_str(), className.c_str(), 0);
 
     updateHwndInfo();
@@ -433,13 +433,13 @@ void SpyWindow::getWindowHandleByPoint(const QPoint& pos) {
 }
 
 bool SpyWindow::eventFilter(QObject* obj, QEvent* event) {
-    // ÕâÀïÊÇµÃµ½Õâ¸ö°´Å¥ÊÇ·ñ°´ÏÂÁË£¬È»ºóµÃµ½¶ÔÓ¦µÄÏÂ±ê£¬È»ºóÍ¨¹ı×ø±êµÃµ½µÃµ½¶ÔÓ¦µÄĞÅÏ¢
+    // è¿™é‡Œæ˜¯å¾—åˆ°è¿™ä¸ªæŒ‰é’®æ˜¯å¦æŒ‰ä¸‹äº†ï¼Œç„¶åå¾—åˆ°å¯¹åº”çš„ä¸‹æ ‡ï¼Œç„¶åé€šè¿‡åæ ‡å¾—åˆ°å¾—åˆ°å¯¹åº”çš„ä¿¡æ¯
     if (m_ShootButtonIsPress && event->type() == QEvent::MouseButtonRelease) {
         QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
         if (mouseEvent->button() == Qt::LeftButton) {
             restoreCursor();
             QPoint pos = QCursor::pos();
-            getWindowHandleByPoint(pos);
+            setWindowHandleByPoint(pos);
             return true;
         }
     }
@@ -451,7 +451,7 @@ void SpyWindow::updateHwndInfo() {
         return;
     }
 
-    // Ğ´³ÉÑ­»·£¬ÕâÑùÊ¡ÊÂ¡£¡£¡£ºóÆÚ¸ÄÒ»ÏÂ£¬ÓĞµãÂé·³¡£¡£¡£
+    // å†™æˆå¾ªç¯ï¼Œè¿™æ ·çœäº‹ã€‚ã€‚ã€‚åæœŸæ”¹ä¸€ä¸‹ï¼Œæœ‰ç‚¹éº»çƒ¦ã€‚ã€‚ã€‚
     for (int row = 0; row < m_InfoTableWidget->rowCount(); row++) {
         QTableWidgetItem* propertyItem = m_InfoTableWidget->item(row, 0);
         if (!propertyItem) {
@@ -459,7 +459,7 @@ void SpyWindow::updateHwndInfo() {
         }
 
         QString key = propertyItem->text().trimmed();
-        if (key == "´°¿Ú¾ä±ú") {
+        if (key == "çª—å£å¥æŸ„") {
             QString valueBase10 = QString::number(reinterpret_cast<quintptr>(m_CurrentWindowHandle));
             QString valueBase16 = QString::number(reinterpret_cast<quintptr>(m_CurrentWindowHandle), 16);
             m_InfoTableWidget->setItem(row, 1, new QTableWidgetItem(valueBase10));
@@ -467,7 +467,7 @@ void SpyWindow::updateHwndInfo() {
             
         }
 
-        if (key == "´°¿ÚÀàÃû") {
+        if (key == "çª—å£ç±»å") {
             std::wstring className(256, L'\0');
             int resultLength = GetClassName(m_CurrentWindowHandle, &className[0], className.size());
             if (resultLength != 0) {
@@ -476,36 +476,36 @@ void SpyWindow::updateHwndInfo() {
             }
         }
 
-        if (key == "´°¿Ú³ß´ç") {
+        if (key == "çª—å£å°ºå¯¸") {
             RECT rect{};
             if (GetWindowRect(m_CurrentWindowHandle, &rect)) {
                 int width = rect.right - rect.left;
                 int height = rect.bottom - rect.top;
                 QString windowSize = QString("%1 x %2").arg(width).arg(height);
                 QString detailedSize = QString("left:%1, right:%2, top:%3, bottom: %4").arg(rect.left).arg(rect.right).arg(rect.top).arg(rect.bottom);
-                // ×Ü¸Ğ¾õÕâÀï²»¶Ô£¬ºÍspyxxµÄ²»¶Ô¡£¡£¡£²»¹ıÏÈÕâÑù°É
+                // æ€»æ„Ÿè§‰è¿™é‡Œä¸å¯¹ï¼Œå’Œspyxxçš„ä¸å¯¹ã€‚ã€‚ã€‚ä¸è¿‡å…ˆè¿™æ ·å§
                 m_InfoTableWidget->setItem(row, 1, new QTableWidgetItem(windowSize));
                 m_InfoTableWidget->setItem(row, 2, new QTableWidgetItem(detailedSize));
 
             }
         }
 
-        if (key == "¿Í»§Çø") {
+        if (key == "å®¢æˆ·åŒº") {
             RECT rect{};
             if (GetClientRect(m_CurrentWindowHandle, &rect)) {
                 int width = rect.right - rect.left;
                 int height = rect.bottom - rect.top;
                 QString windowSize = QString("%1 x %2").arg(width).arg(height);
                 QString detailedSize = QString("left:%1, right:%2, top:%3, bottom: %4").arg(rect.left).arg(rect.right).arg(rect.top).arg(rect.bottom);
-                // ×Ü¸Ğ¾õÕâÀï²»¶Ô£¬ºÍspyxxµÄ²»¶Ô¡£¡£¡£²»¹ıÏÈÕâÑù°É
+                // æ€»æ„Ÿè§‰è¿™é‡Œä¸å¯¹ï¼Œå’Œspyxxçš„ä¸å¯¹ã€‚ã€‚ã€‚ä¸è¿‡å…ˆè¿™æ ·å§
                 m_InfoTableWidget->setItem(row, 1, new QTableWidgetItem(windowSize));
                 m_InfoTableWidget->setItem(row, 2, new QTableWidgetItem(detailedSize));
 
             }
         }
 
-        if (key == "½ø³Ì¾ä±ú") {
-            // ½ø³ÌPID
+        if (key == "è¿›ç¨‹å¥æŸ„") {
+            // è¿›ç¨‹PID
             DWORD dwPid = -1;
             GetWindowThreadProcessId(m_CurrentWindowHandle, &dwPid);
             HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, dwPid);
@@ -513,7 +513,7 @@ void SpyWindow::updateHwndInfo() {
             m_InfoTableWidget->setItem(row, 1, new QTableWidgetItem(value));
         }
 
-        if (key == "´°¿Ú¿ÉÊÓ") {
+        if (key == "çª—å£å¯è§†") {
             bool isVisible = IsWindowVisible(m_CurrentWindowHandle);
             
             QTableWidgetItem* item = new QTableWidgetItem();
@@ -526,7 +526,7 @@ void SpyWindow::updateHwndInfo() {
             m_InfoTableWidget->setItem(row, 1, item);
         }
 
-        if (key == "´°¿Ú½ûÖ¹") {
+        if (key == "çª—å£ç¦æ­¢") {
             bool isEnable = IsWindowEnabled(m_CurrentWindowHandle);
 
             QTableWidgetItem* item = new QTableWidgetItem();
@@ -538,9 +538,24 @@ void SpyWindow::updateHwndInfo() {
             }
             m_InfoTableWidget->setItem(row, 1, item);
         }
+        
+        if (key == "çª—å£ç½®é¡¶") {
+            QTableWidgetItem* item = new QTableWidgetItem();
+            
+            bool isTopMost = isWndTopMost(m_CurrentWindowHandle);
+            
+            if (isTopMost) {
+                item->setBackground(QBrush(QColor(Qt::green)));
+            } else {
+                item->setBackground(QBrush(QColor(Qt::red)));
+            }
+            m_InfoTableWidget->setItem(row, 1, item);
+        }
 
-        if (key == "´°¿Ú¾ä±ú") {
-                
+        if (key == "WS_POPUP") {
+            LONG_PTR style = GetWindowLongPtr(m_CurrentWindowHandle, GWL_STYLE);
+            LONG_PTR exStyle = GetWindowLongPtr(m_CurrentWindowHandle, GWL_EXSTYLE);
+            
         }
 
         
@@ -549,4 +564,9 @@ void SpyWindow::updateHwndInfo() {
    
 
 
+}
+
+bool SpyWindow::isWndTopMost(HWND hwnd) {
+    // ä»ç½‘ä¸Šçœ‹åˆ°çš„ï¼Œåˆ¤æ–­çª—å£æ˜¯å¦ç½®é¡¶
+    return GetWindowLong(hwnd, GWL_EXSTYLE) & WS_EX_TOPMOST;
 }
