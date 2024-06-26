@@ -1,10 +1,14 @@
-﻿#include "SpyWindow.h"
-#include <Windows.h>
+﻿#include <Windows.h>
+#include "SpyWindow.h"
 #include <QStyleOption>
 #include <QPainter>
 #include <QHeaderView>
 #include <QTableWidgetItem>
 #include <QFont>
+#include <QFileDialog>
+#include <QDesktopServices>
+#include <Utils.h>
+#include <Psapi.h>
 
 SpyWindow::SpyWindow(QWidget *parent)
     : QWidget(parent)
@@ -257,67 +261,21 @@ void SpyWindow::initTableWidget() {
 
     addTitleRow("类样式");
     
-    addRow(QStringList() << "CS BYTEALIGNCLIENT" << " " << "");
-    addRow(QStringList() << "CS BYTEALIGNWINDOW" << "" << "");
-    addRow(QStringList() << "CS CLASSDC" << "" << "");
-    addRow(QStringList() << "CS DBLCLKS" << "" << "");
-    addRow(QStringList() << "CS GLOBALCLASS" << "" << "");
-    addRow(QStringList() << "CS HREDRAW" << "" << "");
-    addRow(QStringList() << "CS_IME" << "" << "");
-    addRow(QStringList() << "CS NOCLOSE" << "" << "");
-    addRow(QStringList() << "CS OWNDC" << "" << "");
-    addRow(QStringList() << "CS PARENTDC" << "" << "");
-    addRow(QStringList() << "CS SAVEBITS" << "" << "");
-    addRow(QStringList() << "SURRTRAW" << "" << "");
+    for (const auto& item : ClassInfoVec) {
+        addRow(QStringList() << item.key << " " << item.commnet);
+    }
 
     addTitleRow("窗口样式");
 
-    addRow(QStringList() << "WS_POPUP");
-    addRow(QStringList() << "WS_CHILDWINDOW");
-    addRow(QStringList() << "WS_MINIMIZE");
-    addRow(QStringList() << "WS_VISIBLE");
-    addRow(QStringList() << "WS_DISABLED");
-    addRow(QStringList() << "WS_CLIPSIBLINGS");
-    addRow(QStringList() << "WS_CLIPCHILDREN");
-    addRow(QStringList() << "WS_MAXIMIZE");
-    addRow(QStringList() << "WS_CAPTION");
-    addRow(QStringList() << "WS_BORDER");
-    addRow(QStringList() << "WS_DLGFRAME");
-    addRow(QStringList() << "WS_VSCROLL");
-    addRow(QStringList() << "WS_HSCROLL");
-    addRow(QStringList() << "WS_SYSMEM");
-    addRow(QStringList() << "WS_THICKFRAME");
-    addRow(QStringList() << "WS_GROUP");
-    addRow(QStringList() << "WS_TABSTOP");
-    addRow(QStringList() << "WS_MINIMIZEBOX");
-    addRow(QStringList() << "WS_MAXIMIZEBOX");
-    addRow(QStringList() << "WS_OVERLAPPEDWINDOW");
-    addRow(QStringList() << "WS_POPUPWINDOW");
+    for (const auto& item : WMInfoVec) {
+        addRow(QStringList() << item.key << " " << item.commnet);
+    }
 
     addTitleRow("扩展样式");
 
-    addRow(QStringList() << "WS_EX_PARENTNOTIFY");
-    addRow(QStringList() << "WS_EX_TOPMOST");
-    addRow(QStringList() << "WS_EX_ACCEPTFILES");
-    addRow(QStringList() << "WS_EX_TRANSPARENT");
-    addRow(QStringList() << "WS_EX_MDICHILD");
-    addRow(QStringList() << "WS_EX_TOOLWINDOW");
-    addRow(QStringList() << "WS_EX_WINDOWEDGE");
-    addRow(QStringList() << "WS_EX_CLIENTEDGE");
-    addRow(QStringList() << "WS_EX_CONTEXTHELP");
-    addRow(QStringList() << "WS_EX_RIGHT");
-    addRow(QStringList() << "WS_EX_RTLREADING");
-    addRow(QStringList() << "WS_EX_LEFTSCROLLBAR");
-    addRow(QStringList() << "WS_EX_CONTROLPARENT");
-    addRow(QStringList() << "WS_EX_STATICEDGE");
-    addRow(QStringList() << "WS_EX_APPWINDOW");
-    addRow(QStringList() << "WS_EX_OVERLAPPEDWINDOW");
-    addRow(QStringList() << "WS_EX_PALETTEWINDOW");
-    addRow(QStringList() << "WS_EX_LAYERED");
-    addRow(QStringList() << "WS_EX_NOINHERITLAYOUT");
-    addRow(QStringList() << "WS_EX_LAYOUTRTL");
-    addRow(QStringList() << "WS_EX_COMPOSITED");
-    addRow(QStringList() << "WS_EX_NOACTIVATE");
+    for (const auto& item : WMExtraInfoVec) {
+        addRow(QStringList() << item.key << " " << item.commnet);
+    }
     
         
 }
@@ -338,6 +296,7 @@ void SpyWindow::setAllButtonStyle() {
 
     // 设置图片
     m_ProgramPathPushButton->setIcon(QIcon("image/file.jpg"));
+    m_ProgramPathPushButton->setToolTip(tr("打开文件所在位置"));
     m_ShootButton->setIcon(QIcon("image/shoot.png"));
 
     m_TopLevelPushButton->setIcon(QIcon("image/next.png"));
@@ -358,6 +317,15 @@ void SpyWindow::setAllCheckBoxSytle() {
 void SpyWindow::setAllSingalSlot() {
     // 改变鼠标的样式，注意这里是按压
     connect(m_ShootButton, &QPushButton::pressed, this, &SpyWindow::changeCursor);
+    connect(m_ProgramPathPushButton, &QPushButton::clicked, [this]() {
+        QString path = m_ProgramPathLineEdit->text();
+        int lastIndex = path.lastIndexOf('\\');
+        path = path.left(lastIndex);
+        QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+        });
+    connect(m_FlushButton, &QPushButton::clicked, [this]() {
+        updateHwndInfo();
+        });
 }
 
 
@@ -390,9 +358,8 @@ void SpyWindow::addRow(const QStringList& data) {
         }
 
         QTableWidgetItem* item = new QTableWidgetItem(cellData);
-        // 将第一列设置成不可编辑
         if (col == 0) {
-            item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+            item->setFlags(item->flags() & ~Qt::ItemIsEditable); // 移除可编辑的按钮
         }
         m_InfoTableWidget->setItem(rowPosition, col, item);
     }
@@ -417,23 +384,15 @@ void SpyWindow::setWindowHandleByPoint(const QPoint& pos) {
     
     m_CurrentWindowHandle = WindowFromPoint({pos.x(), pos.y()});
     std::wstring className(256, L'\0');
-    int resultLength = GetClassName(m_CurrentWindowHandle, &className[0], className.size());
+    int resultLength = GetClassName(m_CurrentWindowHandle, &className[0], static_cast<int>(className.size()));
     
-    if (resultLength == 0) {
-        DWORD error = GetLastError();
-        // 做处理
-    } else {
-        className.resize(resultLength);
-    }
-    // 这里确实是获取到了，这里要更新一下
-    //MessageBox(nullptr, className.c_str(), className.c_str(), 0);
-
     updateHwndInfo();
 
 }
 
 bool SpyWindow::eventFilter(QObject* obj, QEvent* event) {
     // 这里是得到这个按钮是否按下了，然后得到对应的下标，然后通过坐标得到得到对应的信息
+    // 但是感觉这里有Bug，因为有的时候反应很慢
     if (m_ShootButtonIsPress && event->type() == QEvent::MouseButtonRelease) {
         QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
         if (mouseEvent->button() == Qt::LeftButton) {
@@ -450,7 +409,28 @@ void SpyWindow::updateHwndInfo() {
     if (!m_CurrentWindowHandle) {
         return;
     }
+   
+    LONG_PTR style = GetWindowLongPtr(m_CurrentWindowHandle, GWL_STYLE);
+    LONG_PTR exStyle = GetWindowLongPtr(m_CurrentWindowHandle, GWL_EXSTYLE);
 
+    // 得到绿色的QTableWidgetItem
+    auto getGreenQTableWidgetItem = []() {
+        QTableWidgetItem* item = new QTableWidgetItem();
+        item->setBackground(QBrush(QColor(0, 170, 0)));
+        return item;
+        };
+
+    // 得到红色的QTableWidgetItem
+    auto getRedQTableWidgetItem = []() {
+        QTableWidgetItem* item = new QTableWidgetItem();
+        item->setBackground(QBrush(QColor(250, 0, 0)));
+        return item;
+        };
+
+    m_WindowHandleLineEdit->setText(QString::number(reinterpret_cast<quintptr>(m_CurrentWindowHandle)));
+    m_WindowTitleLineEdit->setText(getWindowTitleByHwnd(m_CurrentWindowHandle));
+    m_ProgramPathLineEdit->setText(getProgramPathByHwnd(m_CurrentWindowHandle));
+     
     // 写成循环，这样省事。。。后期改一下，有点麻烦。。。
     for (int row = 0; row < m_InfoTableWidget->rowCount(); row++) {
         QTableWidgetItem* propertyItem = m_InfoTableWidget->item(row, 0);
@@ -459,38 +439,35 @@ void SpyWindow::updateHwndInfo() {
         }
 
         QString key = propertyItem->text().trimmed();
+
         if (key == "窗口句柄") {
             QString valueBase10 = QString::number(reinterpret_cast<quintptr>(m_CurrentWindowHandle));
             QString valueBase16 = QString::number(reinterpret_cast<quintptr>(m_CurrentWindowHandle), 16);
             m_InfoTableWidget->setItem(row, 1, new QTableWidgetItem(valueBase10));
             m_InfoTableWidget->setItem(row, 2, new QTableWidgetItem(valueBase16));
-            
-        }
-
-        if (key == "窗口类名") {
+           
+        } else if (key == "窗口类名") {
             std::wstring className(256, L'\0');
-            int resultLength = GetClassName(m_CurrentWindowHandle, &className[0], className.size());
+            int resultLength = GetClassName(m_CurrentWindowHandle, &className[0], static_cast<int>(className.size()));
             if (resultLength != 0) {
                 QString value = QString::fromStdWString(className.substr(0, resultLength));
                 m_InfoTableWidget->setItem(row, 1, new QTableWidgetItem(value));
             }
-        }
-
-        if (key == "窗口尺寸") {
+        } else if (key == "窗口尺寸") {
             RECT rect{};
             if (GetWindowRect(m_CurrentWindowHandle, &rect)) {
                 int width = rect.right - rect.left;
                 int height = rect.bottom - rect.top;
-                QString windowSize = QString("%1 x %2").arg(width).arg(height);
-                QString detailedSize = QString("left:%1, right:%2, top:%3, bottom: %4").arg(rect.left).arg(rect.right).arg(rect.top).arg(rect.bottom);
+                QString windowSize = QString("%1 * %2").arg(width).arg(height);
+                QString detailedSize = QString("左边:%1, 右边:%2, 上边:%3, 下边: %4").arg(rect.left).arg(rect.right).arg(rect.top).arg(rect.bottom);
                 // 总感觉这里不对，和spyxx的不对。。。不过先这样吧
                 m_InfoTableWidget->setItem(row, 1, new QTableWidgetItem(windowSize));
                 m_InfoTableWidget->setItem(row, 2, new QTableWidgetItem(detailedSize));
 
-            }
-        }
+                m_WindowPosLineEdit->setText(windowSize + QString("; ") + detailedSize);
 
-        if (key == "客户区") {
+            }
+        } else if (key == "客户区") {
             RECT rect{};
             if (GetClientRect(m_CurrentWindowHandle, &rect)) {
                 int width = rect.right - rect.left;
@@ -498,75 +475,88 @@ void SpyWindow::updateHwndInfo() {
                 QString windowSize = QString("%1 x %2").arg(width).arg(height);
                 QString detailedSize = QString("left:%1, right:%2, top:%3, bottom: %4").arg(rect.left).arg(rect.right).arg(rect.top).arg(rect.bottom);
                 // 总感觉这里不对，和spyxx的不对。。。不过先这样吧
+                // 这里会发生内存泄露么，我感觉不是很会，
                 m_InfoTableWidget->setItem(row, 1, new QTableWidgetItem(windowSize));
                 m_InfoTableWidget->setItem(row, 2, new QTableWidgetItem(detailedSize));
-
             }
-        }
-
-        if (key == "进程句柄") {
+        } else if (key == "进程句柄") {
             // 进程PID
             DWORD dwPid = -1;
             GetWindowThreadProcessId(m_CurrentWindowHandle, &dwPid);
             HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, dwPid);
             QString value = QString::number(dwPid);
             m_InfoTableWidget->setItem(row, 1, new QTableWidgetItem(value));
-        }
-
-        if (key == "窗口可视") {
+            CloseHandle(hProcess);
+        } else if (key == "窗口可视") {
             bool isVisible = IsWindowVisible(m_CurrentWindowHandle);
-            
-            QTableWidgetItem* item = new QTableWidgetItem();
-
-            if (isVisible) {
-                item->setBackground(QBrush(QColor(Qt::green)));
-            } else {
-                item->setBackground(QBrush(QColor(Qt::red)));
-            }
-            m_InfoTableWidget->setItem(row, 1, item);
-        }
-
-        if (key == "窗口禁止") {
+            m_InfoTableWidget->setItem(row, 1, isVisible ? getGreenQTableWidgetItem(): getRedQTableWidgetItem());
+        } else if (key == "窗口禁止") {
             bool isEnable = IsWindowEnabled(m_CurrentWindowHandle);
-
-            QTableWidgetItem* item = new QTableWidgetItem();
-
-            if (isEnable) {
-                item->setBackground(QBrush(QColor(Qt::red)));
-            } else {
-                item->setBackground(QBrush(QColor(Qt::green)));
-            }
-            m_InfoTableWidget->setItem(row, 1, item);
-        }
-        
-        if (key == "窗口置顶") {
-            QTableWidgetItem* item = new QTableWidgetItem();
-            
+            m_InfoTableWidget->setItem(row, 1, isEnable ? getGreenQTableWidgetItem() : getRedQTableWidgetItem());
+        } else if (key == "窗口置顶") {
             bool isTopMost = isWndTopMost(m_CurrentWindowHandle);
-            
-            if (isTopMost) {
-                item->setBackground(QBrush(QColor(Qt::green)));
-            } else {
-                item->setBackground(QBrush(QColor(Qt::red)));
+            m_InfoTableWidget->setItem(row, 1, isTopMost ? getGreenQTableWidgetItem() : getRedQTableWidgetItem());
+            // 这里我感觉都可以直接进行简化，但是不知道怎么简化。。。先这样吧
+        }
+
+        // 更新窗口系列的函数
+        for (const auto& info: ClassInfoVec) {
+            if (key == info.key) {
+                m_InfoTableWidget->setItem(row, 1, style & info.style ? getGreenQTableWidgetItem() : getRedQTableWidgetItem());
+                break;
             }
-            m_InfoTableWidget->setItem(row, 1, item);
         }
 
-        if (key == "WS_POPUP") {
-            LONG_PTR style = GetWindowLongPtr(m_CurrentWindowHandle, GWL_STYLE);
-            LONG_PTR exStyle = GetWindowLongPtr(m_CurrentWindowHandle, GWL_EXSTYLE);
-            
+        for (const auto& info : WMInfoVec) {
+            if (key == info.key) {
+                m_InfoTableWidget->setItem(row, 1, style & info.style ? getGreenQTableWidgetItem() : getRedQTableWidgetItem());
+                break;
+            }
         }
 
-        
-
+        // 更新额外的窗口信息
+        for (const auto& info : WMExtraInfoVec) {
+            if (key == info.key) {
+                m_InfoTableWidget->setItem(row, 1, exStyle & info.style ? getGreenQTableWidgetItem() : getRedQTableWidgetItem());
+                break;
+            }
+        }
     }
    
 
 
 }
 
-bool SpyWindow::isWndTopMost(HWND hwnd) {
+bool SpyWindow::isWndTopMost(HWND hwnd) const {
     // 从网上看到的，判断窗口是否置顶
     return GetWindowLong(hwnd, GWL_EXSTYLE) & WS_EX_TOPMOST;
+}
+
+QString SpyWindow::getProgramPathByHwnd(HWND hwnd) const {
+    DWORD dwPid = -1;
+    GetWindowThreadProcessId(m_CurrentWindowHandle, &dwPid);
+    HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, dwPid);
+    QString processPath{};
+    if (hProcess != nullptr) {
+        TCHAR szProcessName[MAX_PATH] = TEXT("<unknown>");
+        GetModuleFileNameEx(hProcess, NULL, szProcessName, MAX_PATH);
+        processPath = QString::fromWCharArray(szProcessName);
+    }
+
+    if (hProcess) {
+        CloseHandle(hProcess);
+    }
+
+    return processPath;
+}
+
+QString SpyWindow::getWindowTitleByHwnd(HWND hwnd) const {
+    std::wstring className(256, L'\0');
+    int resultLength = GetClassName(m_CurrentWindowHandle, &className[0], static_cast<int>(className.size()));
+
+    if (resultLength != 0) {
+        className.resize(resultLength);
+    }
+
+    return QString::fromStdWString(className);
 }
