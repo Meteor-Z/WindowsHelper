@@ -1,4 +1,4 @@
-#include "WindowsHelper.h"
+﻿#include "WindowsHelper.h"
 #include <QHBoxLayout>
 #include <qpushbutton.h>
 #include <Windows.h>
@@ -9,14 +9,14 @@ WindowsHelper::WindowsHelper(QWidget *parent)
     ui.setupUi(this);
 
     setWindowTitle(tr("WindowsHelper"));
-    // 设置初始值大小
+    // 设置初始值大小，
     resize(1700, 1300);
 
     m_CentralWidget = ui.centralWidget;
 
     m_MainLayout = new QVBoxLayout(m_CentralWidget);
     m_ButtonLayout = new QHBoxLayout();
-    m_FrameSpyButton = new QPushButton(tr("窗口Spy"));
+    m_FrameSpyButton = new QPushButton(tr("窗口Spyxx"));
     m_FramProcessManagementButton = new QPushButton(tr("进程管理"));
     
     setInitFrameButton();

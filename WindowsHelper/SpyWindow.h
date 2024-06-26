@@ -1,6 +1,6 @@
-#pragma once
+﻿#pragma once
 
-// VS窗口乱码问题的解决
+//// VS窗口乱码问题的解决。
 #if _MSC_VER >= 1600
 #pragma execution_character_set("utf-8")// 该指令仅支持VS环境
 #endif
