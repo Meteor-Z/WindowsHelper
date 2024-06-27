@@ -91,6 +91,19 @@ private:
     QString getProgramPathByHwnd(HWND hwnd) const;
 
     QString getWindowTitleByHwnd(HWND hwnd) const;
+
+    // 更新右边的树状窗口
+    void updateWindowTree();
+
+
+    // 回调函数
+    static BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam); 
+
+    void addTreeItem(HWND hwnd);
+
+    // 根据HWND获取到对应的图标，如果没有，那么就返回一个默认的图标
+    QPixmap getIconByHwnd(HWND hwnd);
+
 private:
     Ui::SpyWindowClass ui;
     QTreeWidget* m_WindowTree{}; // 窗口的Tree

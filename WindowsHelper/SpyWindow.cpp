@@ -6,9 +6,12 @@
 #include <QTableWidgetItem>
 #include <QFont>
 #include <QFileDialog>
-#include <QDesktopServices>
+#include <QPixmap>
 #include <Utils.h>
 #include <Psapi.h>
+#include <QDesktopServices>
+#include <QtWinExtras/qwinfunctions.h>
+#include <QMenu>
 
 SpyWindow::SpyWindow(QWidget *parent)
     : QWidget(parent)
@@ -17,7 +20,8 @@ SpyWindow::SpyWindow(QWidget *parent)
 
     // layout集体初始化
     initAllLayout();
-   
+
+    updateWindowTree();
     
     initTopButton();
 
@@ -30,6 +34,9 @@ SpyWindow::SpyWindow(QWidget *parent)
     setAllSingalSlot();
     setAllLayout();
     QApplication::instance()->installEventFilter(this);
+
+    
+    
 }
 
 SpyWindow::~SpyWindow(){
@@ -61,8 +68,8 @@ void SpyWindow::initTopButton() {
 
 void SpyWindow::initAllLayout() {
     m_MainLayout = new QVBoxLayout(this);
+    m_WindowTree = new QTreeWidget(this);
     m_TopLayout = new QHBoxLayout();
-    m_WindowTree = new QTreeWidget();
     m_ButtomLayout = new QHBoxLayout();
     m_LeftButtomLayout = new QVBoxLayout();
     m_LeftButtomWindowGridLayout = new QGridLayout();
@@ -326,6 +333,25 @@ void SpyWindow::setAllSingalSlot() {
     connect(m_FlushButton, &QPushButton::clicked, [this]() {
         updateHwndInfo();
         });
+
+    // 点击QTreeWidgetItem，然后显示相关信息
+    connect(m_WindowTree, &QTreeWidget::itemPressed, [this](QTreeWidgetItem* item, int column) {
+        if (qApp->mouseButtons() == Qt::LeftButton) {
+            HWND hwnd = reinterpret_cast<HWND>(item->text(column).split(' ')[0].toULongLong());
+            m_CurrentWindowHandle = hwnd;
+            updateHwndInfo();
+            updateWindowTree();
+        }
+
+        if (qApp->mouseButtons() == Qt::RightButton) {
+            QMenu* menu = new QMenu(this);
+            QAction* message = new QAction(tr("消息监听"), this);
+            menu->addAction(message);
+            if (item) {
+                menu->exec(QCursor::pos());
+            }
+        }
+    });
 }
 
 
@@ -490,13 +516,29 @@ void SpyWindow::updateHwndInfo() {
         } else if (key == "窗口可视") {
             bool isVisible = IsWindowVisible(m_CurrentWindowHandle);
             m_InfoTableWidget->setItem(row, 1, isVisible ? getGreenQTableWidgetItem(): getRedQTableWidgetItem());
+            m_VisableCheckBox->setChecked(isVisible);
         } else if (key == "窗口禁止") {
             bool isEnable = IsWindowEnabled(m_CurrentWindowHandle);
-            m_InfoTableWidget->setItem(row, 1, isEnable ? getGreenQTableWidgetItem() : getRedQTableWidgetItem());
+            m_InfoTableWidget->setItem(row, 1, isEnable ? getRedQTableWidgetItem(): getGreenQTableWidgetItem());
+            m_StopMoveCheckBox->setChecked(!isEnable);
         } else if (key == "窗口置顶") {
             bool isTopMost = isWndTopMost(m_CurrentWindowHandle);
             m_InfoTableWidget->setItem(row, 1, isTopMost ? getGreenQTableWidgetItem() : getRedQTableWidgetItem());
-            // 这里我感觉都可以直接进行简化，但是不知道怎么简化。。。先这样吧
+            m_TopWindowCheckBox->setChecked(isTopMost);
+        } else if (key == "窗口透明") {
+            if (exStyle & WS_EX_LAYERED) {
+                BYTE alpha{ 0 };
+                DWORD flags{ 0 };
+                if (GetLayeredWindowAttributes(m_CurrentWindowHandle, nullptr, &alpha, &flags)) {
+                    if (flags & LWA_ALPHA) {
+                        m_InfoTableWidget->setItem(row, 1, alpha < 255 ? getGreenQTableWidgetItem() : getRedQTableWidgetItem());
+                        m_TransparentCheckBox->setChecked(alpha < 255);
+                    }
+                }
+            } else {
+                m_InfoTableWidget->setItem(row, 1, getRedQTableWidgetItem());
+                m_TransparentCheckBox->setChecked(false);
+            }
         }
 
         // 更新窗口系列的函数
@@ -560,3 +602,77 @@ QString SpyWindow::getWindowTitleByHwnd(HWND hwnd) const {
 
     return QString::fromStdWString(className);
 }
+
+void SpyWindow::updateWindowTree() {
+    // 从顶级窗口开始直接枚举，相当于传递回调函数了
+    EnumWindows(EnumWindowsProc, reinterpret_cast<LPARAM>(this));
+    
+
+}
+
+BOOL SpyWindow::EnumWindowsProc(HWND hwnd, LPARAM lParam) {
+    if (GetParent(hwnd) == nullptr) {
+        SpyWindow* spyWindow = reinterpret_cast<SpyWindow*>(lParam);
+        spyWindow->addTreeItem(hwnd);
+    }
+    return TRUE;
+
+}
+
+void SpyWindow::addTreeItem(HWND hwnd) {
+    RECT rect;
+    // 太少了话，就直接 return 回去，不显示了。 //TODO: 这里改一下，纠正一下
+    if (GetWindowRect(hwnd, &rect)) {
+        if (rect.left == rect.right && rect.top == rect.bottom && rect.left == 0) {
+            return;
+        }
+    }
+
+    TCHAR windowTitle[256];
+    TCHAR className[256];
+
+    GetWindowText(hwnd, windowTitle, sizeof(windowTitle) / sizeof(TCHAR));
+    GetClassName(hwnd, className, sizeof(className) / sizeof(TCHAR));
+    
+    QString windowHandle = QString::number(reinterpret_cast<quintptr>(hwnd));
+    QString windowTitleStr = QString::fromWCharArray(windowTitle);
+    QString classNameStr = QString::fromWCharArray(className);
+    QString all = windowHandle + QString(" ") + windowTitleStr + QString(" ") + classNameStr;
+    QTreeWidgetItem* windowItem = new QTreeWidgetItem(QStringList() << all);
+    windowItem->setIcon(0, QIcon(getIconByHwnd(hwnd)));
+    m_WindowTree->addTopLevelItem(windowItem);
+}
+
+QPixmap SpyWindow::getIconByHwnd(HWND hwnd) {
+    HICON hIcon = reinterpret_cast<HICON>(SendMessage(hwnd, WM_GETICON, ICON_BIG, 0));
+
+    if (hIcon == nullptr) {
+        hIcon = reinterpret_cast<HICON>(GetClassLongPtr(hwnd, GCLP_HICON));
+    }
+
+    if (hIcon == nullptr) {
+        hIcon = reinterpret_cast<HICON>(SendMessage(hwnd, WM_GETICON, ICON_SMALL, 0));
+    }
+
+    if (hIcon == nullptr) {
+        hIcon = reinterpret_cast<HICON>(GetClassLongPtr(hwnd, GCLP_HICONSM));
+    }
+
+    if (hIcon == nullptr) {
+        return QPixmap();
+    }
+
+    ICONINFO iconInfo;
+    if (!GetIconInfo(hIcon, &iconInfo)) {
+        return QPixmap(); // Failed to get icon info
+    }
+
+    QPixmap pixmap = QtWin::fromHBITMAP(iconInfo.hbmColor, QtWin::HBitmapNoAlpha);
+
+    DeleteObject(iconInfo.hbmColor);
+    DeleteObject(iconInfo.hbmMask);
+    DestroyIcon(hIcon);
+
+    return pixmap;
+}
+

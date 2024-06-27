@@ -37,7 +37,7 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>qt</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>core;gui;widgets;winextras</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
@@ -92,9 +92,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <QtUic Include="MessageWindow.ui" />
     <QtUic Include="SpyWindow.ui" />
     <QtUic Include="WindowsHelper.ui" />
     <QtMoc Include="WindowsHelper.h" />
+    <ClCompile Include="MessageWindow.cpp" />
     <ClCompile Include="SpyWindow.cpp" />
     <ClCompile Include="WindowsHelper.cpp" />
     <ClCompile Include="main.cpp" />
@@ -103,6 +105,7 @@
     <QtMoc Include="SpyWindow.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="MessageWindow.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="resource1.h" />
     <ClInclude Include="Utils.h" />
