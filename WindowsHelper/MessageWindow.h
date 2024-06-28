@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <Windows.h>
 #include <QWidget>
@@ -9,7 +9,7 @@ class MessageWindow : public QWidget {
 	Q_OBJECT
 
 public:
-	MessageWindow(QWidget *parent = nullptr, HWND hwnd);
+	MessageWindow(QWidget *parent = nullptr, HWND hwnd = nullptr);
 	~MessageWindow();
 
 private:
