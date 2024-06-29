@@ -5,6 +5,8 @@
 #include <map>
 #include "Hook.h"
 
+// 这个 #pragma好像是一个数据段，在这里面的东西可以进行共享
+#pragma data_seg("Shared")
 HWND g_hNotifyWnd{ nullptr }; // 将消息传递给哪一个窗口
 HWND g_hCaptureWnd{ nullptr }; // 要捕获消息的窗口
 
@@ -14,6 +16,10 @@ HHOOK g_hCallWndProcRetHook{ nullptr };
 HHOOK g_hGetMessageHook{ nullptr };
 
 HINSTANCE g_hInstance{ nullptr };
+
+#pragma data_seg()
+// Initialised data End of data share
+#pragma comment(linker,"/section:Shared,RWS")
 
 // CBTProc的回调函数，这里处理的是CBT系列，然后将消息传递给全局窗口
 static LRESULT CALLBACK CBTProc(int nCode, WPARAM wParam, LPARAM lParam) {
@@ -155,7 +161,7 @@ bool InstallCallWndProcRetHook(HWND hNotifyWnd, HWND hCaptureWnd) {
 }
 
 bool UninstallCallWndProcRetHook() {
-    if (UninstallCallWndProcRetHook) {
+    if (g_hCallWndProcRetHook) {
         UnhookWindowsHookEx(g_hCallWndProcRetHook);
         g_hCallWndProcRetHook = nullptr;
         OutputDebugString(L"Uninstall CallWndProcRet Hook");
