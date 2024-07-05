@@ -13,6 +13,12 @@
 #include <QtWinExtras/qwinfunctions.h>
 #include <QMenu>
 
+
+static QString GetHwndTitle(HWND hwnd) {
+    std::wstring className(256, L'\0');
+    GetWindowText(hwnd, &className[0], static_cast<int>(className.size()));
+    return QString::fromStdWString(className);
+}
 SpyWindow::SpyWindow(QWidget *parent)
     : QWidget(parent)
 {
@@ -324,15 +330,48 @@ void SpyWindow::setAllCheckBoxSytle() {
 void SpyWindow::setAllSingalSlot() {
     // 改变鼠标的样式，注意这里是按压
     connect(m_ShootButton, &QPushButton::pressed, this, &SpyWindow::changeCursor);
+    // 打开对应的窗口
     connect(m_ProgramPathPushButton, &QPushButton::clicked, [this]() {
         QString path = m_ProgramPathLineEdit->text();
         int lastIndex = path.lastIndexOf('\\');
         path = path.left(lastIndex);
         QDesktopServices::openUrl(QUrl::fromLocalFile(path));
         });
+    // 更新窗口信息
     connect(m_FlushButton, &QPushButton::clicked, [this]() {
         updateHwndInfo();
         });
+
+    // 设置置顶和取消置顶
+    connect(m_TopWindowCheckBox, &QCheckBox::clicked, [this]() {
+        if (m_TopWindowCheckBox->isChecked()) {
+            static const UINT swpFlags = SWP_NOMOVE | SWP_NOSIZE | SWP_NOOWNERZORDER;
+            SetWindowPos(m_CurrentWindowHandle, HWND_TOPMOST, 0, 0, 0, 0, swpFlags);
+        } else {
+            static const UINT swpFlags = SWP_NOMOVE | SWP_NOSIZE | SWP_NOOWNERZORDER;
+            SetWindowPos(m_CurrentWindowHandle, HWND_NOTOPMOST, 0, 0, 0, 0, swpFlags);
+        }
+        updateHwndInfo();
+        });
+
+    // 设置窗口禁止， //TODO:这里不是很会，有错误
+    connect(m_StopMoveCheckBox, &QCheckBox::clicked, [this]() {
+        if (m_StopMoveCheckBox->isChecked()) {
+            LONG_PTR style = GetWindowLongPtr(m_CurrentWindowHandle, GWL_STYLE);
+            // 移除调整大小相关的样式
+            style &= ~(WS_THICKFRAME | WS_MAXIMIZEBOX | WS_MINIMIZEBOX);
+
+            SetWindowLongPtr(m_CurrentWindowHandle, GWL_STYLE, style);
+            SetWindowPos(m_CurrentWindowHandle, nullptr, 0, 0, 0, 0,
+                SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
+        } else {
+            MessageBox(nullptr, L"取消静止", L"设置静止", 0);
+        }
+        updateHwndInfo();
+        });
+
+
+    
 
     // 点击QTreeWidgetItem，然后显示相关信息
     connect(m_WindowTree, &QTreeWidget::itemPressed, [this](QTreeWidgetItem* item, int column) {
@@ -565,12 +604,13 @@ void SpyWindow::updateHwndInfo() {
         }
     }
    
-
+    // 更新四个对应的编辑
+    m_ParentLineEdit->setText(GetHwndTitle(GetParent(m_CurrentWindowHandle)));
+    
 
 }
 
 bool SpyWindow::isWndTopMost(HWND hwnd) const {
-    // 从网上看到的，判断窗口是否置顶
     return GetWindowLong(hwnd, GWL_EXSTYLE) & WS_EX_TOPMOST;
 }
 

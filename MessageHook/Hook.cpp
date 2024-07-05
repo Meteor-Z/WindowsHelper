@@ -5,21 +5,19 @@
 #include <map>
 #include "Hook.h"
 
-// 这个 #pragma好像是一个数据段，在这里面的东西可以进行共享
 #pragma data_seg("Shared")
-HWND g_hNotifyWnd{ nullptr }; // 将消息传递给哪一个窗口
-HWND g_hCaptureWnd{ nullptr }; // 要捕获消息的窗口
+HWND g_hNotifyWnd = nullptr;
+HWND g_hCaptureWnd = nullptr;
 
-HHOOK g_hCBTHook{ nullptr }; // CBT的钩子句柄, 以下同理
-HHOOK g_hCallWndProcHook{ nullptr };
-HHOOK g_hCallWndProcRetHook{ nullptr };
-HHOOK g_hGetMessageHook{ nullptr };
+HHOOK g_hCBTHook = nullptr;
+HHOOK g_hCallWndProcHook = nullptr;
+HHOOK g_hCallWndProcRetHook = nullptr;
+HHOOK g_hGetMessageHook = nullptr;
 
-HINSTANCE g_hInstance{ nullptr };
-
+HINSTANCE g_hInstance = nullptr;
 #pragma data_seg()
-// Initialised data End of data share
-#pragma comment(linker,"/section:Shared,RWS")
+#pragma comment(linker, "/section:Shared,RWS")
+
 
 // CBTProc的回调函数，这里处理的是CBT系列，然后将消息传递给全局窗口
 static LRESULT CALLBACK CBTProc(int nCode, WPARAM wParam, LPARAM lParam) {

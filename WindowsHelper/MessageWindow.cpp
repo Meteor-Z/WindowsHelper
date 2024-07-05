@@ -32,8 +32,6 @@ bool MessageWindow::injectDLLByHwnd(HWND hwnd, const QString& dllPath) {
     }
 
     WaitForSingleObject(hThread, INFINITE);
-
-    VirtualAllocEx(hProcess, pRemoteMemory, 0, MEM_RELEASE);
     CloseHandle(hThread);
     CloseHandle(hProcess);
     return true;
