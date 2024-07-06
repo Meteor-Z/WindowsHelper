@@ -11,6 +11,7 @@
 #include "qboxlayout.h"
 #include "qstackedwidget.h"
 #include <SpyWindow.h>
+#include <ProcessWindow.h>
 
 class WindowsHelper : public QMainWindow
 {
@@ -39,7 +40,8 @@ private:
     QPushButton* m_FrameSpyButton{}; // 窗口Spy Button
     QPushButton* m_FramProcessManagementButton{}; // 进程管理的Button
 
-    SpyWindow* m_SpyWindowWidget{}; // 窗口
+    SpyWindow* m_SpyWindowWidget{}; // 监视窗口
+    ProcessWindow* m_ProcessWindowWidget{}; // 进程管理
 
 
     

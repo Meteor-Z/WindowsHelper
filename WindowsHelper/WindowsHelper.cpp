@@ -24,8 +24,8 @@ WindowsHelper::WindowsHelper(QWidget *parent)
 
     connect(m_FrameSpyButton, &QPushButton::clicked, this, [&]() {
         m_StackedWidget->setCurrentIndex(0);
-        SpyWindow* temp = static_cast<SpyWindow*>(m_StackedWidget->currentWidget());
-        temp->show();
+        //SpyWindow* temp = static_cast<SpyWindow*>(m_StackedWidget->currentWidget());
+        //temp->show();
         });
     connect(m_FramProcessManagementButton, &QPushButton::clicked, this, [&]() {
         m_StackedWidget->setCurrentIndex(1);
@@ -56,12 +56,10 @@ void WindowsHelper::initMainWidget() {
     m_StackedWidget = new QStackedWidget(m_CentralWidget);
 
     m_SpyWindowWidget = new SpyWindow();
-    QWidget* demoWidgetTwo = new QWidget();
-
-    demoWidgetTwo->setStyleSheet("background-color: blue;");
+    m_ProcessWindowWidget = new ProcessWindow();
 
     m_StackedWidget->addWidget(m_SpyWindowWidget);
-    m_StackedWidget->addWidget(demoWidgetTwo);
+    m_StackedWidget->addWidget(m_ProcessWindowWidget);
 
     m_MainLayout->addLayout(m_ButtonLayout);
     m_MainLayout->addWidget(m_StackedWidget);

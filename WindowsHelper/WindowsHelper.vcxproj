@@ -93,10 +93,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <QtUic Include="MessageWindow.ui" />
+    <QtUic Include="ProcessWindow.ui" />
     <QtUic Include="SpyWindow.ui" />
     <QtUic Include="WindowsHelper.ui" />
     <QtMoc Include="WindowsHelper.h" />
     <ClCompile Include="MessageWindow.cpp" />
+    <ClCompile Include="ProcessWindow.cpp" />
     <ClCompile Include="SpyWindow.cpp" />
     <ClCompile Include="WindowsHelper.cpp" />
     <ClCompile Include="main.cpp" />
@@ -106,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MessageWindow.h" />
+    <QtMoc Include="ProcessWindow.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="resource1.h" />
     <ClInclude Include="Utils.h" />

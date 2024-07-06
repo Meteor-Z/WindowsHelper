@@ -1,5 +1,4 @@
 ﻿#include <Windows.h>
-#include "SpyWindow.h"
 #include <QStyleOption>
 #include <QPainter>
 #include <QHeaderView>
@@ -12,6 +11,8 @@
 #include <QDesktopServices>
 #include <QtWinExtras/qwinfunctions.h>
 #include <QMenu>
+#include "SpyWindow.h"
+#include "MessageWindow.h"
 
 
 static QString GetHwndTitle(HWND hwnd) {
@@ -384,8 +385,12 @@ void SpyWindow::setAllSingalSlot() {
 
         if (qApp->mouseButtons() == Qt::RightButton) {
             QMenu* menu = new QMenu(this);
-            QAction* message = new QAction(tr("消息监听"), this);
-            menu->addAction(message);
+            QAction* messageAction = new QAction(tr("消息监听"), this);
+            menu->addAction(messageAction);
+            connect(messageAction, &QAction::triggered, this, [this]() {
+                MessageWindow* messageWindow = new MessageWindow(nullptr, m_CurrentWindowHandle);
+                messageWindow->show();
+                });
             if (item) {
                 menu->exec(QCursor::pos());
             }
@@ -606,7 +611,8 @@ void SpyWindow::updateHwndInfo() {
    
     // 更新四个对应的编辑
     m_ParentLineEdit->setText(GetHwndTitle(GetParent(m_CurrentWindowHandle)));
-    
+    m_TopLevelLineEdit->setText(GetHwndTitle(GetAncestor(m_CurrentWindowHandle, GA_ROOT)));
+
 
 }
 
