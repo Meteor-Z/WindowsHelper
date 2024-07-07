@@ -1,9 +1,10 @@
 <RCC>
     <qresource prefix="/WindowsHelper"/>
     <qresource prefix="/">
-        <file>image/flush_buttom.jpg</file>
         <file>image/file.jpg</file>
-        <file>image/shoot.png</file>
+        <file>image/flush_buttom.jpg</file>
+        <file>image/logo.jpg</file>
         <file>image/next.png</file>
+        <file>image/shoot.png</file>
     </qresource>
 </RCC>
