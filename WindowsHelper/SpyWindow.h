@@ -35,6 +35,9 @@ private:
     // 最上层的一系列信息
     void initTopButton();
 
+    // 初始化常用操作的菜单
+    void initCommonOperationMenu();
+
     // 初始化所有布局的信息，
     void initAllLayout();
     // 设置所有的布局信息
@@ -97,6 +100,7 @@ private:
 
 
     // 回调函数
+    // lParam: 相当于参数， re_cast传入，然后再转回来，主要是因为 这是一个静态函数
     static BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam); 
 
     void addTreeItem(HWND hwnd);
@@ -113,7 +117,7 @@ private:
     QHBoxLayout* m_ButtomLayout{}; // 下面左右的Layout
 
     QPushButton* m_BasicInfoButton{};// 基本信息
-    QPushButton* m_CommonOperationsButton{}; // 常用操作
+    QToolButton* m_CommonOperationsToolButton{}; // 常用操作
     QLabel* m_FindWindowlabel{}; // 查看窗口
     QLineEdit* m_FindWindowLineEdit{}; // 输入框，查找
 

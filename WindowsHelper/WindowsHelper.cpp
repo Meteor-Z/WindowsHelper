@@ -1,13 +1,15 @@
 ﻿#include "WindowsHelper.h"
 #include <QHBoxLayout>
 #include <qpushbutton.h>
+#include <QMessageBox>
 #include <Windows.h>
 
 WindowsHelper::WindowsHelper(QWidget *parent)
-    : QMainWindow(parent)
-{
+    : QMainWindow(parent) {
     ui.setupUi(this);
 
+    initAllMenu();
+    setWindowIcon(QIcon("image/logo.jpg"));
     setWindowTitle(tr("WindowsHelper"));
     // 设置初始值大小，
     resize(1700, 1300);
@@ -63,5 +65,27 @@ void WindowsHelper::initMainWidget() {
 
     m_MainLayout->addLayout(m_ButtonLayout);
     m_MainLayout->addWidget(m_StackedWidget);
+    
+}
+
+void WindowsHelper::initAllMenu() {
+    m_MenuBar = new QMenuBar(this);
+    setMenuBar(m_MenuBar);
+
+    QAction* aboutAction = new QAction("关于", this);
+    m_MenuBar->addAction(aboutAction);
+
+    connect(aboutAction, &QAction::triggered, this, [this]() {
+        QMessageBox aboutBox(this);
+        aboutBox.setWindowTitle("关于");
+        aboutBox.setText("<h2>关于</h2>"
+            "<p>Windows客户端帮助助手，很大程度上是模仿彗星小助手</p>"
+            "<p></p>"
+            "<p>作者：Meteor_Z</p>"
+            "<p>项目地址：https://github.com/Meteor-Z/WindowsHelper<p>");
+        aboutBox.setIcon(QMessageBox::Information);
+        aboutBox.setMinimumSize(1000, 1000);
+        aboutBox.exec();
+        });
     
 }

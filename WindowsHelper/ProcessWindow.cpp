@@ -7,9 +7,29 @@
 #include "ProcessWindow.h"
 #include <QtWin>
 
+// enum到QString的转换
+static QString EnumToQString(ExeInfo info) {
+    switch (info) {
+    case ExeInfo::FileDescription: return QString("FileDescription");
+    case ExeInfo::CompanyName: return QString("CompanyName");
+    default: return QString("");
+    }
+}
+
+// 根据进程号获得完整的进程路径
+static QString GetExeFullPath(DWORD dwProcessId) {
+    HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, dwProcessId);
+    WCHAR filePath[MAX_PATH];
+    DWORD ret = GetModuleFileNameEx(hProcess, NULL, filePath, MAX_PATH);
+    if (ret) {
+        return QString::fromWCharArray(filePath);
+    } else {
+        return QString("nullptr");
+    }
+}
+
 ProcessWindow::ProcessWindow(QWidget *parent)
-	: QWidget(parent)
-{
+	: QWidget(parent) {
 	ui.setupUi(this);
     initAllLayout();
     initTableWidget();
@@ -35,6 +55,7 @@ void ProcessWindow::initTableWidget() {
 
 }
 
+
 void ProcessWindow::updateProcessInfo() {
     // 获得当前的进程快照
     HANDLE hProcessSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -54,18 +75,19 @@ void ProcessWindow::updateProcessInfo() {
 
     int row{ 0 };
     do {
+        
         m_ProcessTableWidget->insertRow(row);
 
+        QString fileFullPath = GetExeFullPath(pe32.th32ProcessID);
         // 名称
         m_ProcessTableWidget->setItem(row, 0, getProcessName(pe32.szExeFile, pe32.th32ProcessID));
         // 进程号
         m_ProcessTableWidget->setItem(row, 1, new QTableWidgetItem(QString::number(pe32.th32ProcessID)));
+        // 进程号
+        m_ProcessTableWidget->setItem(row, 2, new QTableWidgetItem(getFileVersionInfo(GetExeFullPath(pe32.th32ProcessID), ExeInfo::CompanyName)));
+        // 描述
+        m_ProcessTableWidget->setItem(row, 3, new QTableWidgetItem(getFileVersionInfo(GetExeFullPath(pe32.th32ProcessID), ExeInfo::FileDescription)));
 
-        /*QString description = getProcessDescription(pe32.th32ProcessID);
-        table.setItem(row, 2, new QTableWidgetItem(description));
-
-        QString companyName = getProcessCompanyName(description);
-        table.setItem(row, 3, new QTableWidgetItem(companyName));*/
         row++;
     } while (Process32Next(hProcessSnap, &pe32));
 }
@@ -93,9 +115,6 @@ QTableWidgetItem* ProcessWindow::getProcessName(WCHAR szExeFile[MAX_PATH], DWORD
     return item;
 }
 
-QTableWidgetItem* ProcessWindow::getProcessDescription(DWORD dwProcessId) {
-    return nullptr;
-}
 
 QIcon ProcessWindow::getFileIcon(const QString& filePullPath) {
     HICON windowsIcon{ nullptr };
@@ -117,8 +136,40 @@ QIcon ProcessWindow::getFileIcon(const QString& filePullPath) {
     QPixmap qtIcon = QtWin::fromHICON(windowsIcon);
 
     // 释放HIcon资源
-     DestroyIcon(windowsIcon);
+    DestroyIcon(windowsIcon);
+
+
    
 
     return QIcon(qtIcon);
+}
+
+
+#pragma comment(lib, "version") // 链接使用的
+
+QString ProcessWindow::getFileVersionInfo(const QString& filePath, ExeInfo key) {
+    DWORD handle{ 0 };
+    DWORD size = GetFileVersionInfoSize(filePath.toStdWString().c_str(), &handle);
+    if (size == 0) {
+        return QString("");
+    }
+    if (handle != 0) {
+        return QString("");
+    }
+
+    std::vector<BYTE> buffer(size);
+    if (!GetFileVersionInfo(filePath.toStdWString().c_str(), handle, size, buffer.data())) {
+        return QString("");
+    }
+
+    LPVOID versionInfo = nullptr;
+    UINT versionInfoLength = 0;
+    std::wstring subBlock = QString(QString("\\StringFileInfo\\040904B0\\") + EnumToQString(key)).toStdWString();
+
+    if (!VerQueryValue(buffer.data(), subBlock.c_str(), &versionInfo, &versionInfoLength)) {
+        return QString("");
+    }
+
+    return QString::fromStdWString(std::wstring(static_cast<wchar_t*>(versionInfo)));
+
 }

@@ -12,6 +12,7 @@
 #include "qstackedwidget.h"
 #include <SpyWindow.h>
 #include <ProcessWindow.h>
+#include <QMenuBar>
 
 class WindowsHelper : public QMainWindow
 {
@@ -26,11 +27,16 @@ private:
 
     // 初始化下面的Widget的
     void initMainWidget();
+
+    // 设置菜单栏
+    void initAllMenu();
 private:
 private:
     Ui::WindowsHelperClass ui{};
     
     QWidget* m_CentralWidget{}; // 主要的窗口
+
+    QMenuBar* m_MenuBar{}; // 菜单栏
 
     QHBoxLayout* m_ButtonLayout{}; // 上面一系列Button的Layout
     QVBoxLayout* m_MainLayout{}; // 从上到下的布局

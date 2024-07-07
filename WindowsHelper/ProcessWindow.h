@@ -11,6 +11,13 @@
 #include <QVBoxLayout>
 #include "ui_ProcessWindow.h"
 
+// 根据传入的消息来进行选择
+enum class ExeInfo {
+    FileDescription,
+    CompanyName,
+};
+
+
 class ProcessWindow : public QWidget
 {
 	Q_OBJECT
@@ -31,12 +38,12 @@ private:
     // szExeFile: 进程名称
     // dwProcesId: 进程号
     QTableWidgetItem* getProcessName(WCHAR szExeFile[MAX_PATH], DWORD dwProcessId);
-    // 得到描述符
-    QTableWidgetItem* getProcessDescription(DWORD dwProcessId);
 
     // 根据完整路径获取对应的图标
     QIcon getFileIcon(const QString& filePullPath);
 
+    // 根据Key来获取到对应的消息
+    QString getFileVersionInfo(const QString& filePath, ExeInfo info);
 
 private:
 	Ui::ProcessWindowClass ui;

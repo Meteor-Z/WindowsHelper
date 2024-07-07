@@ -11,6 +11,7 @@
 #include <QDesktopServices>
 #include <QtWinExtras/qwinfunctions.h>
 #include <QMenu>
+#include <QToolButton>
 #include "SpyWindow.h"
 #include "MessageWindow.h"
 
@@ -58,11 +59,16 @@ void SpyWindow::paintEvent(QPaintEvent* e) {
 
 void SpyWindow::initTopButton() {
     m_BasicInfoButton = new QPushButton(tr("复制基本信息"), this);
-    m_CommonOperationsButton = new QPushButton(tr("常用操作"), this);
+    m_CommonOperationsToolButton = new QToolButton(this);
+    m_CommonOperationsToolButton->setText(tr("常用操作"));
+    initCommonOperationMenu();
+    
     m_FindWindowlabel = new QLabel(tr("查找窗口"), this);
     m_FindWindowLineEdit = new QLineEdit(this);
     m_TopLayout->addWidget(m_BasicInfoButton);
-    m_TopLayout->addWidget(m_CommonOperationsButton);
+    m_TopLayout->addWidget(m_CommonOperationsToolButton);
+
+    
     
     // 添加一个伸缩项，其实就是中间隔开，效果出来了就行
     m_TopLayout->addStretch();
@@ -73,6 +79,56 @@ void SpyWindow::initTopButton() {
    
 }
 
+void SpyWindow::initCommonOperationMenu() {
+    QMenu* menu = new QMenu(this);
+    QAction* maximizeAction = new QAction("最大化", this);
+    QAction* minimizeAction = new QAction("最小化", this);
+    QAction* restoreAction = new QAction("还原", this);
+    QAction* closeAction = new QAction("关闭", this);
+    m_CommonOperationsToolButton->setFixedSize(110, 30);
+
+    // 将菜单项添加到菜单
+    menu->addAction(maximizeAction);
+    menu->addAction(minimizeAction);
+    menu->addAction(restoreAction);
+    menu->addAction(closeAction);
+
+    m_CommonOperationsToolButton->setMenu(menu);
+    // 设置为点击按钮即弹出菜单
+    m_CommonOperationsToolButton->setPopupMode(QToolButton::InstantPopup);
+
+    // 最大化
+    connect(maximizeAction, &QAction::triggered, this, [this]() {
+        if (m_CurrentWindowHandle) {
+            ShowWindow(m_CurrentWindowHandle, SW_MAXIMIZE);
+            updateHwndInfo();
+        }
+        });
+    // 最小化
+    connect(minimizeAction, &QAction::triggered, this, [this] {
+        if (m_CurrentWindowHandle) {
+            ShowWindow(m_CurrentWindowHandle, SW_MINIMIZE);
+            updateHwndInfo();
+        }
+        });
+    // 还原
+    connect(restoreAction, &QAction::triggered, this, [this] {
+        if (m_CurrentWindowHandle) {
+            ShowWindow(m_CurrentWindowHandle, SW_RESTORE);
+            updateHwndInfo();
+        }
+        });
+	// 关闭
+	connect(closeAction, &QAction::triggered, this, [this] {
+		if (m_CurrentWindowHandle) {
+			SendMessage(m_CurrentWindowHandle, WM_CLOSE, 0, 0);
+		}
+		});
+
+
+    
+
+}
 void SpyWindow::initAllLayout() {
     m_MainLayout = new QVBoxLayout(this);
     m_WindowTree = new QTreeWidget(this);
@@ -232,7 +288,9 @@ void SpyWindow::initTableWidget() {
     m_InfoTableWidget->setColumnCount(headers.count());
     m_InfoTableWidget->setHorizontalHeaderLabels(headers);
     m_InfoTableWidget->verticalHeader()->setHidden(true);
-    
+    // 设置不可编辑
+    m_InfoTableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
     // 设置铺平，占满整个QTableWidget
     m_InfoTableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     
