@@ -8,7 +8,6 @@
 
 - enumWindows() 遍历窗口的，通过将句柄传递给每一个窗口，进而将应用程序定义的回调函数，枚举屏幕上的所有顶级窗口，
 
-
 ## Spyxx捕捉消息
 
 这个还是比较重要的，主要使用的是DLL注入的技术，不过有点恶心的是：32位的程序只能监控32位的dll信息，64位的程序也是只能监视64位的dll信息，
@@ -41,10 +40,14 @@ HHOOK SetWindowsHookEx(
 - 图标有黑边，感觉还可以进行改进一下
 - 为什么就获取不到对应的父窗口/子窗口呢？
 - QTableWidget要设置成可复制但是不可编辑的的状态
-    - 给你的拷贝事件连一个槽函数，在该函数里自己用代码把你要的内容存剪贴板里
+  - 给你的拷贝事件连一个槽函数，在该函数里自己用代码把你要的内容存剪贴板里
 有任何Bug，或者改进的地方，都可以直接联系我：QQ：3030218083
 
 ## 相关资料
 
 - [Spxx是如何工作的]("https://www.codeproject.com/Articles/1698/MS-Spy-style-Window-Finder")
 - [MyLiteSpy]("https://github.com/yinkaisheng/MyLiteSpy/tree/master") 其中的DLL很多都是借鉴于此，教我怎么进行Hook代码的。
+
+## 其他
+
+经过一些教训，目前代码是在Windows VS平台上进行开发，所以编码一律使用UTF-8BOM + CRLF。

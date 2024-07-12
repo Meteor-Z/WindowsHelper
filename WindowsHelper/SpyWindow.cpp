@@ -118,12 +118,12 @@ void SpyWindow::initCommonOperationMenu() {
             updateHwndInfo();
         }
         });
-	// 关闭
-	connect(closeAction, &QAction::triggered, this, [this] {
-		if (m_CurrentWindowHandle) {
-			SendMessage(m_CurrentWindowHandle, WM_CLOSE, 0, 0);
-		}
-		});
+    // 关闭
+    connect(closeAction, &QAction::triggered, this, [this] {
+        if (m_CurrentWindowHandle) {
+            SendMessage(m_CurrentWindowHandle, WM_CLOSE, 0, 0);
+        }
+        });
 
 
     

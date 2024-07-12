@@ -1,4 +1,4 @@
-﻿#include <Windows.h>
+#include <Windows.h>
 #include <tlhelp32.h>
 #include <Psapi.h>
 #include <QtWinExtras/qtwinextrasversion.h>

@@ -1,8 +1,9 @@
-﻿#include "WindowsHelper.h"
+#include "WindowsHelper.h"
 #include <QHBoxLayout>
 #include <qpushbutton.h>
 #include <QMessageBox>
 #include <Windows.h>
+#include <QTextEdit>
 
 WindowsHelper::WindowsHelper(QWidget *parent)
     : QMainWindow(parent) {
@@ -75,17 +76,32 @@ void WindowsHelper::initAllMenu() {
     QAction* aboutAction = new QAction("关于", this);
     m_MenuBar->addAction(aboutAction);
 
-    connect(aboutAction, &QAction::triggered, this, [this]() {
-        QMessageBox aboutBox(this);
-        aboutBox.setWindowTitle("关于");
-        aboutBox.setText("<h2>关于</h2>"
-            "<p>Windows客户端帮助助手，很大程度上是模仿彗星小助手</p>"
-            "<p></p>"
-            "<p>作者：Meteor_Z</p>"
-            "<p>项目地址：https://github.com/Meteor-Z/WindowsHelper<p>");
-        aboutBox.setIcon(QMessageBox::Information);
-        aboutBox.setMinimumSize(1000, 1000);
-        aboutBox.exec();
+    // 点击显示对应的
+    connect(aboutAction, &QAction::triggered, this, []() {
+        QDialog* dialog = new QDialog();
+        QVBoxLayout* layout = new QVBoxLayout(dialog);
+
+        QLabel* githubLabel = new QLabel(dialog);
+        githubLabel->setText("项目地址：<a href=\"https://github.com/Meteor-Z/WindowsHelper\"> https://github.com/Meteor-Z/WindowsHelper</a>");
+
+        // 启用交互式链接
+        githubLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
+        githubLabel->setOpenExternalLinks(true);
+
+        QLabel* userLable = new QLabel(dialog);
+        userLable->setText("作者：<a href=\"https://github.com/Meteor-Z\"> Meteor-Z</a>");
+
+        // 启用交互式链接
+        userLable->setTextInteractionFlags(Qt::TextBrowserInteraction);
+        userLable->setOpenExternalLinks(true);
+        QLabel* otherlLabel = new QLabel("本软件开源，欢迎提供对应的Bug", dialog);
+
+        layout->addWidget(githubLabel);
+        layout->addWidget(userLable);
+        layout->addWidget(otherlLabel);
+        QSize size = layout->sizeHint();
+        dialog->setFixedSize(size);
+        dialog->exec();
         });
     
 }
