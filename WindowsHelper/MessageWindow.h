@@ -24,9 +24,11 @@ class MessageWindow : public QWidget {
 	Q_OBJECT
 
 public:
-	MessageWindow(QWidget *parent = nullptr, HWND hwnd = nullptr);
+	MessageWindow(QWidget *parent = nullptr, HWND hCaptureWnd = nullptr);
 	~MessageWindow();
 protected:
+    // 处理来气Windows程序发来的消息
+    bool nativeEvent(const QByteArray& eventType, void* message, long* result) override;
 
 private:
     // 设置基础样式
@@ -35,9 +37,12 @@ private:
     void setTextEdit();
     // 注入DLL然后获取消息
     bool injectDLLByHwnd(HWND hwnd, const QString& dllPath);
+
 private:
 	Ui::MessageWindowClass ui;
     QListWidget* m_ListWidget{}; // 显示数据的
+
+    HWND m_hCaptureHwnd{}; // 监视的窗口
 
 
     

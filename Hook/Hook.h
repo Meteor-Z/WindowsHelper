@@ -1,8 +1,9 @@
-﻿#ifndef HOOK_H
+﻿#pragma once
+
+#ifndef HOOK_H
 #define HOOK_H
 
 
-#pragma once
 
 #include "pch.h"
 #include <Windows.h>

@@ -50,9 +50,11 @@ DLL_EXPORT bool InstallCBTHook(HWND hwnd) {
 
         if (g_hCBTHook) {
             OutputDebugString(L"CBT Hook Succeed");
+            MessageBox(nullptr, L"ok", L"ok", 0);
             return true;
         } else {
-            OutputDebugString(L"CBT Hook Failed");
+            MessageBox(nullptr, L"寄了", L"ok", 0);
+
         }
     }
 

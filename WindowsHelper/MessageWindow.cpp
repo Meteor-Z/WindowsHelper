@@ -1,9 +1,10 @@
 ﻿#include "MessageWindow.h"
 #include <QHboxLayout>
 #include <QTableWidget>
-#include <Hook.h>
+#include <thread>
+#include "Hook.h"
 
-MessageWindow::MessageWindow(QWidget *parent, HWND hwnd)
+MessageWindow::MessageWindow(QWidget *parent, HWND hCaptureWnd)
     : QWidget(parent) {
     ui.setupUi(this);
     QHBoxLayout* tempLayout = new QHBoxLayout(this);
@@ -12,21 +13,29 @@ MessageWindow::MessageWindow(QWidget *parent, HWND hwnd)
     initStyle();
     resize(1300, 800);
     setTextEdit();
+    m_hCaptureHwnd = hCaptureWnd;
 
-    // 发送的窗口Hwnd
-    g_hNotifyWnd = (HWND)this->winId();
-    // 捕获的窗口Hwnd
-    g_hCaptureWnd = hwnd;
+    InstallCBTHook((HWND)this->winId());
+    InstallCallWndProcHook((HWND)this->winId(), hCaptureWnd);
 
-    
-    
-    
-
-    
-    
+    InstallGetMessageHook((HWND)this->winId(), hCaptureWnd);
 }
 
 MessageWindow::~MessageWindow() {
+}
+
+bool MessageWindow::nativeEvent(const QByteArray& eventType, void* message, long* result) {
+    if (eventType == "windows_generic_MSG") {
+        MSG* msg = static_cast<MSG*>(message);
+        if (msg->message == WM_NotifyCallWndProc || msg->message == WM_NotifyGetMessage) {
+            QString msgContent = QString("Received WM_NOTIFY_CALLWNDPROC: hwnd=%1, message=%2")
+                .arg(reinterpret_cast<int>(msg->hwnd))
+                .arg(msg->lParam);
+            m_ListWidget->addItem(new QListWidgetItem(msgContent));
+            return true;
+        }
+    }
+    return QWidget::nativeEvent(eventType, message, result);
 }
 
 
