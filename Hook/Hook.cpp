@@ -5,6 +5,7 @@
 #include <map>
 #include "Hook.h"
 
+// 这个共享字段，read write shared，学到了
 #pragma data_seg("Shared")
 HWND g_hNotifyWnd = nullptr;
 HWND g_hCaptureWnd = nullptr;

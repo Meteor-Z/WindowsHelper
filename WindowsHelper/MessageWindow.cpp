@@ -1,16 +1,27 @@
 ﻿#include "MessageWindow.h"
 #include <QHboxLayout>
 #include <QTableWidget>
+#include <Hook.h>
 
 MessageWindow::MessageWindow(QWidget *parent, HWND hwnd)
-    : QWidget(parent), m_CurrentWindowHandler(hwnd) {
+    : QWidget(parent) {
     ui.setupUi(this);
     QHBoxLayout* tempLayout = new QHBoxLayout(this);
-    m_TableWidget = new QTableWidget(this);
-    tempLayout->addWidget(m_TableWidget);
+    m_ListWidget = new QListWidget(this);
+    tempLayout->addWidget(m_ListWidget);
     initStyle();
     resize(1300, 800);
     setTextEdit();
+
+    // 发送的窗口Hwnd
+    g_hNotifyWnd = (HWND)this->winId();
+    // 捕获的窗口Hwnd
+    g_hCaptureWnd = hwnd;
+
+    
+    
+    
+
     
     
 }
@@ -20,17 +31,10 @@ MessageWindow::~MessageWindow() {
 
 
 void MessageWindow::initStyle() {
-    m_TableWidget->setRowCount(1);  // 设置行数
-    m_TableWidget->setColumnCount(1);  // 设置列数
-
-    // 添加一行文字
-    m_TableWidget->setItem(0, 0, new QTableWidgetItem("This is a single line of text"));
-
 }
-
 void MessageWindow::setTextEdit() {
     for (int i = 0; i < 100; i++) {
-        m_TableWidget->setItem(i, 0, new QTableWidgetItem(QString("%1 行").arg(i)));
+        m_ListWidget->addItem(new QListWidgetItem(QString("%1行").arg(i)));
     }
 }
 

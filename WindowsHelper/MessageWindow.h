@@ -16,6 +16,7 @@
 #include <QTextEdit>
 #include <QMouseEvent>
 #include <QTableWidget>
+#include <QListWidget>
 #include "ui_MessageWindow.h"
 
 // 这个是Spxx的相关信息，然后弹出对应的信息框
@@ -36,8 +37,8 @@ private:
     bool injectDLLByHwnd(HWND hwnd, const QString& dllPath);
 private:
 	Ui::MessageWindowClass ui;
-    HWND m_CurrentWindowHandler{}; // 监视的HWND窗口
-    QTableWidget* m_TableWidget{}; // 显示数据的
+    QListWidget* m_ListWidget{}; // 显示数据的
+
 
     
 };
