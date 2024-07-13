@@ -15,6 +15,7 @@
 #include <QString>
 #include <QTextEdit>
 #include <QMouseEvent>
+#include <QTableWidget>
 #include "ui_MessageWindow.h"
 
 // 这个是Spxx的相关信息，然后弹出对应的信息框
@@ -27,14 +28,16 @@ public:
 protected:
 
 private:
+    // 设置基础样式
+    void initStyle();
     // 设置TextEdit的相关配置
     void setTextEdit();
     // 注入DLL然后获取消息
     bool injectDLLByHwnd(HWND hwnd, const QString& dllPath);
 private:
 	Ui::MessageWindowClass ui;
-    HWND m_CurrentWindowHandler{}; // 当前的监控句柄
-    QTextEdit* m_textEdit{}; // 显示消息的窗口
+    HWND m_CurrentWindowHandler{}; // 监视的HWND窗口
+    QTableWidget* m_TableWidget{}; // 显示数据的
 
     
 };

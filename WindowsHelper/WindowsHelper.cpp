@@ -1,4 +1,4 @@
-#include "WindowsHelper.h"
+﻿#include "WindowsHelper.h"
 #include <QHBoxLayout>
 #include <qpushbutton.h>
 #include <QMessageBox>
