@@ -34,8 +34,8 @@ enum NotifyMsg {
     WM_NotifyCallWndProcRet,
     WM_NotifyGetMessage,
 };
-
-
+// 转换函数，注意，这里应该返回POD类型，因为跨DLL了
+extern "C" DLL_EXPORT const char* EnumToChar(UINT msg);
 extern "C" DLL_EXPORT bool InstallCBTHook(HWND hwnd);
 extern "C" DLL_EXPORT bool UninstallMessageHook();
 

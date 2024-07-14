@@ -1,8 +1,7 @@
 ﻿#pragma once
 
 /*
-消息窗口，相当于写了一个新的窗口了
-
+当打开监听消息的时候，就会出现这个窗口，主要是监控消息
 */
 
 // 只要是支持UTF-8的指令
@@ -18,6 +17,7 @@
 #include <QTableWidget>
 #include <QListWidget>
 #include "ui_MessageWindow.h"
+#include <QMessageBox>
 
 // 这个是Spxx的相关信息，然后弹出对应的信息框
 class MessageWindow : public QWidget {
@@ -29,7 +29,7 @@ public:
 protected:
     // 处理来气Windows程序发来的消息
     bool nativeEvent(const QByteArray& eventType, void* message, long* result) override;
-
+    void closeEvent(QCloseEvent* event) override;
 private:
     // 设置基础样式
     void initStyle();

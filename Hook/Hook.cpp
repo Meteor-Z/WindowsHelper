@@ -36,7 +36,17 @@ static LRESULT CALLBACK CBTProc(int nCode, WPARAM wParam, LPARAM lParam) {
     return CallNextHookEx(g_hCBTHook, nCode, wParam, lParam);
 }
 
-
+const char* EnumToChar(UINT msg) {
+    switch (msg) {
+    case WM_NotifyActivate: return "WM_NotifyActivate";
+    case WM_NotifyFocus: return "WM_NotifyCallWndProc";
+    case WM_NotifyCallWndProc: return "WM_NotifyCallWndProc";
+    case WM_NotifyCallWndProcRet: return "WM_NotifyCallWndProcRet";
+    case WM_NotifyGetMessage: return "WM_NotifyGetMessage";
+    default: return "unknown";
+    }
+    return "unknown";
+}
 
 DLL_EXPORT bool InstallCBTHook(HWND hwnd) {
     g_hNotifyWnd = hwnd;
@@ -146,13 +156,12 @@ static LRESULT CALLBACK CallWndProcRet(int code, WPARAM wParam, LPARAM lParam)
 bool InstallCallWndProcRetHook(HWND hNotifyWnd, HWND hCaptureWnd) {
     g_hNotifyWnd = hNotifyWnd;
     g_hCaptureWnd = hCaptureWnd;
-
-    if (!g_hCallWndProcHook) {
+    g_hCallWndProcHook = nullptr;
+    if (g_hCallWndProcHook == nullptr) {
         DWORD dwThreadId = ::GetWindowThreadProcessId(g_hCaptureWnd, NULL);
         g_hCallWndProcRetHook = SetWindowsHookEx(WH_CALLWNDPROCRET, (HOOKPROC)CallWndProcRet, g_hInstance, dwThreadId);
 
         if (g_hCallWndProcRetHook) {
-            OutputDebugString(L"Install CallWndProceRet Succeed");
             return true;
         } else {
             // do something....
