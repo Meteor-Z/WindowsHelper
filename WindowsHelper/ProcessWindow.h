@@ -27,9 +27,14 @@ public:
 	~ProcessWindow();
     
 private:
+    // 初始化Layout
     void initAllLayout();
+
     // 设置所有的样式
     void initTableWidget();
+
+    // 初始化
+    void initAllTableWidget();
 
     // 更新进程信息
     void updateProcessInfo();
@@ -49,4 +54,19 @@ private:
 	Ui::ProcessWindowClass ui;
     QVBoxLayout* m_VBoxLayout{}; // 总的竖直排布
     QTableWidget* m_ProcessTableWidget{}; // 进程
+
+    // 进程模块 进程窗口 进程线程 进程权限
+    QTabWidget* m_TabWidget{}; // 四个模块的切换
+
+    QWidget* m_ProcessModulePage{}; // 进程模块
+    QTableWidget* m_ProcessModuleTableWidget{}; // 进程模块里面的Widget
+
+    QWidget* m_ProcessWindowPage{}; // 进程窗口
+    QTableWidget* m_ProcessWindowTableWidget{}; // 进程窗口中的Widget
+
+    QWidget* m_ProcessThreadPage{}; // 进程线程
+    QTableWidget* m_ProcessThreadTableWidget{}; // 进程线程中的Widget
+
+    QWidget* m_ProcessPermissionPage{}; // 进程权限
+    QTableWidget* m_ProcessPermissionTableWidget{}; // 进程权限中的Widget
 };

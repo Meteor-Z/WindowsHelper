@@ -33,6 +33,8 @@ ProcessWindow::ProcessWindow(QWidget *parent)
 	ui.setupUi(this);
     initAllLayout();
     initTableWidget();
+
+    
     
 }
 
@@ -41,8 +43,56 @@ ProcessWindow::~ProcessWindow() {}
 void ProcessWindow::initAllLayout() {
     m_VBoxLayout = new QVBoxLayout(this);
     m_ProcessTableWidget = new QTableWidget(this);
-    m_VBoxLayout->addWidget(m_ProcessTableWidget);
+
+    m_TabWidget = new QTabWidget(this);
+
+    /*
+    QWidget* processModulePage{}; // 进程模块
+    QWidget* processWindowPage{}; // 进程窗口
+    QWidget* processThreadPage{}; // 进程线程
+    QWidget* processPermissionPage{}; // 进程权限
+    */
     
+    m_ProcessModulePage = new QWidget(this);
+    m_ProcessModuleTableWidget = new QTableWidget(this);
+
+    m_ProcessWindowPage = new QWidget(this);
+    m_ProcessWindowTableWidget = new QTableWidget(this);
+
+    m_ProcessThreadPage = new QWidget(this);
+    m_ProcessThreadTableWidget = new QTableWidget(this);
+
+    m_ProcessPermissionPage = new QWidget(this);
+    m_ProcessPermissionTableWidget = new QTableWidget(this);
+
+    // 可以为每个页面添加布局和控件
+    QVBoxLayout* moduleLayout = new QVBoxLayout;
+    moduleLayout->addWidget(m_ProcessModuleTableWidget);
+    m_ProcessModulePage->setLayout(moduleLayout);
+    
+
+    QVBoxLayout* windowLayout = new QVBoxLayout;
+    windowLayout->addWidget(m_ProcessWindowTableWidget);
+    m_ProcessWindowPage->setLayout(windowLayout);
+    
+
+    QVBoxLayout* threadLayout = new QVBoxLayout;
+    threadLayout->addWidget(m_ProcessThreadTableWidget);
+    m_ProcessThreadPage->setLayout(threadLayout);
+
+    QVBoxLayout* permissionLayout = new QVBoxLayout;
+    permissionLayout->addWidget(m_ProcessPermissionTableWidget);
+    m_ProcessPermissionPage->setLayout(permissionLayout);
+
+    // 将页面添加到 QTabWidget
+    m_TabWidget->addTab(m_ProcessModulePage, "进程模块");
+    m_TabWidget->addTab(m_ProcessWindowPage, "进程窗口");
+    m_TabWidget->addTab(m_ProcessThreadPage, "进程线程");
+    m_TabWidget->addTab(m_ProcessPermissionPage, "进程权限");
+    
+
+    m_VBoxLayout->addWidget(m_ProcessTableWidget);
+    m_VBoxLayout->addWidget(m_TabWidget);
     
 }
 

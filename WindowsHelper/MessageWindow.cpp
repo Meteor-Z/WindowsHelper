@@ -101,9 +101,9 @@ void MessageWindow::closeEvent(QCloseEvent* event) {
 void MessageWindow::initStyle() {
 }
 void MessageWindow::setTextEdit() {
-    for (int i = 0; i < 100; i++) {
+  /*  for (int i = 0; i < 100; i++) {
         m_ListWidget->addItem(new QListWidgetItem(QString("%1行").arg(i)));
-    }
+    }*/
 }
 
 bool MessageWindow::injectDLLByHwnd(HWND hwnd, const QString& dllPath) {
