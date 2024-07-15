@@ -36,12 +36,15 @@ enum NotifyMsg {
 };
 // 转换函数，注意，这里应该返回POD类型，因为跨DLL了
 extern "C" DLL_EXPORT const char* EnumToChar(UINT msg);
+// WH_CBT：截取系统基本消息，激活，简历，销毁，最小化，最大化，移动，改变尺寸等窗口时间
 extern "C" DLL_EXPORT bool InstallCBTHook(HWND hwnd);
 extern "C" DLL_EXPORT bool UninstallMessageHook();
 
+// 
 extern "C" DLL_EXPORT bool InstallCallWndProcHook(HWND hNotifyWnd, HWND hCaptureWnd);
 extern "C" DLL_EXPORT bool UninstallCallWndProcHook();
 
+// WH_CALLWNDPROCRET 
 extern "C" DLL_EXPORT bool InstallCallWndProcRetHook(HWND hNotifyWnd, HWND hCaptureWnd);
 extern "C" DLL_EXPORT bool UninstallCallWndProcRetHook();
 

@@ -13,8 +13,8 @@
 
 // 根据传入的消息来进行选择
 enum class ExeInfo {
-    FileDescription,
-    CompanyName,
+    FileDescription, // 文件描述符
+    CompanyName, // 公司名称
 };
 
 
