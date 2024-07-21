@@ -97,16 +97,11 @@ void MessageWindow::closeEvent(QCloseEvent* event) {
     event->accept();
 }
 
-
 void MessageWindow::initStyle() {
 }
+
 void MessageWindow::setTextEdit() {
-  /*  for (int i = 0; i < 100; i++) {
-        m_ListWidget->addItem(new QListWidgetItem(QString("%1行").arg(i)));
-    }*/
 }
 
-bool MessageWindow::injectDLLByHwnd(HWND hwnd, const QString& dllPath) {
-    // 不会。，呜呜呜
-    return true;
-}
+
+

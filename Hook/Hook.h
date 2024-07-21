@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #ifndef HOOK_H
 #define HOOK_H
@@ -40,11 +40,11 @@ extern "C" DLL_EXPORT const char* EnumToChar(UINT msg);
 extern "C" DLL_EXPORT bool InstallCBTHook(HWND hwnd);
 extern "C" DLL_EXPORT bool UninstallMessageHook();
 
-// 
+// WH_CALLWNDPROC: 发送给窗口过程的消息
 extern "C" DLL_EXPORT bool InstallCallWndProcHook(HWND hNotifyWnd, HWND hCaptureWnd);
 extern "C" DLL_EXPORT bool UninstallCallWndProcHook();
 
-// WH_CALLWNDPROCRET 
+// WH_CALLWNDPROCRET 处理上面那个过程的返回值
 extern "C" DLL_EXPORT bool InstallCallWndProcRetHook(HWND hNotifyWnd, HWND hCaptureWnd);
 extern "C" DLL_EXPORT bool UninstallCallWndProcRetHook();
 

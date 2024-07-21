@@ -33,10 +33,11 @@ protected:
 private:
     // 设置基础样式
     void initStyle();
+
     // 设置TextEdit的相关配置
     void setTextEdit();
-    // 注入DLL然后获取消息
-    bool injectDLLByHwnd(HWND hwnd, const QString& dllPath);
+
+   
 
 private:
 	Ui::MessageWindowClass ui;

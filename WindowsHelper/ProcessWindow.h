@@ -33,11 +33,17 @@ private:
     // 设置所有的样式
     void initTableWidget();
 
-    // 初始化
-    void initAllTableWidget();
+    // 设置下面的TableWidget
+    void setButtomTableWidget();
 
     // 更新进程信息
     void updateProcessInfo();
+
+    // 设置所有的信号槽
+    void setAllSignal();
+
+    // 设置所有的Button
+    void setAllButton();
 
     // 得到进程名,并且包含应用的图片,如果获取不到,就不显示出来了
     // szExeFile: 进程名称
@@ -50,9 +56,17 @@ private:
     // 根据Key来获取到对应的消息
     QString getFileVersionInfo(const QString& filePath, ExeInfo info);
 
+    // 更新进程模块的消息
+    void updateProcessModule(int row, int column);
+
+    // 更新进程窗口的消息
+    void updateProcessWindow(int row, int column);
+
 private:
 	Ui::ProcessWindowClass ui;
+
     QVBoxLayout* m_VBoxLayout{}; // 总的竖直排布
+    QHBoxLayout* m_HTopLayout{}; // 上面的排布
     QTableWidget* m_ProcessTableWidget{}; // 进程
 
     // 进程模块 进程窗口 进程线程 进程权限

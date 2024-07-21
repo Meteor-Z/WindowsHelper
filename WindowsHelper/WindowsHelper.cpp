@@ -94,7 +94,7 @@ void WindowsHelper::initAllMenu() {
         // 启用交互式链接
         userLable->setTextInteractionFlags(Qt::TextBrowserInteraction);
         userLable->setOpenExternalLinks(true);
-        QLabel* otherlLabel = new QLabel("本软件开源，欢迎交流issuse/Bug", dialog);
+        QLabel* otherlLabel = new QLabel("项目只是为了学习Windows相关开发的知识，欢迎提出相关Bug", dialog);
 
         layout->addWidget(githubLabel);
         layout->addWidget(userLable);
